@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package nebula;
+
+service NebulaRegistry {
+    rpc GetPackageInfo (PackageRequest) returns (PackageInfo);
+    rpc ListPackages (Empty) returns (PackageList);
+}
+
+message PackageRequest {
+    string name = 1;
+}
+
+message PackageInfo {
+    string name = 1;
+    string version = 2;
+    string description = 3;
+}
+
+message PackageList {
+    repeated PackageInfo packages = 1;
+}
+
+message Empty {}
