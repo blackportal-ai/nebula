@@ -37,6 +37,9 @@ jobs:
             ~/.cargo
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
+      - name: Install Protobuf
+        run: sudo apt-get install -y protobuf-compiler
+
       - name: Run Clippy
         run: cargo clippy --all-targets
 
@@ -88,6 +91,9 @@ jobs:
             ~/.cargo
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
+      - name: Install Protobuf
+        run: sudo apt-get install -y protobuf-compiler
+
       - name: Run Tests
         run: cargo test
 
@@ -104,6 +110,9 @@ jobs:
         with:
           profile: minimal
           toolchain: stable
+
+      - name: Install Protobuf
+        run: sudo apt-get install -y protobuf-compiler
 
       - name: Install Tarpaulin
         run: cargo install cargo-tarpaulin
