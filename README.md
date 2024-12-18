@@ -47,6 +47,10 @@ nebula info new_dataset # Get detailed info about a new dataset
 
 The Nebula CLI communicates with the registry via gRPC using Tonic.
 
+## Nebula Registry Web
+
+In the far away future we might implement a web interface for the Nebula registry.
+
 ## Contributors
 
 The following contributors have either helped to start this project, have contributed
