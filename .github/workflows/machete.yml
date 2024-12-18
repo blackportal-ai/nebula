@@ -38,6 +38,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cargo-
 
+      - name: Install Protobuf
+        run: sudo apt-get install -y protobuf-compiler
+
       - name: Install cargo-machete
         run: cargo install cargo-machete
 
