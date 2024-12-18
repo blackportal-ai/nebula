@@ -43,9 +43,9 @@ nebula remove outdated_model # Remove an outdated model
 nebula info new_dataset # Get detailed info about a new dataset
 ```
 
-## Nebula Backend
+## Nebula Registry
 
-The Nebula CLI communicates with the backend via gRPC using Tonic.
+The Nebula CLI communicates with the registry via gRPC using Tonic.
 
 ## Contributors
 
