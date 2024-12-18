@@ -28,6 +28,8 @@ nebula sync # Synchronizes local datasets and models with the remote repository
 nebula cache clean [--force] # Clears the local dataset and models cache
 nebula cache list # Lists cached datasets and models
 
+nebula registry set <registry_url> # Sets the target registry URL
+
 nebula <command> --help # Shows help for a specific command
 ```
 
@@ -41,11 +43,12 @@ nebula explore climate_data_2023 --filter .temperature # Explore specific data w
 nebula update --all # Update all installed datasets and models
 nebula remove outdated_model # Remove an outdated model
 nebula info new_dataset # Get detailed info about a new dataset
+nebula registry set https://myregistry.example.com # Set the target registry URL
 ```
 
 ## Nebula Registry
 
-The Nebula CLI communicates with the registry via gRPC using Tonic.
+The Nebula CLI communicates with the registry via gRPC using Tonic. The registry can be self-hosted if desired and using the CLI we can configure the registry URL.
 
 ## Nebula Registry Web
 
