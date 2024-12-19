@@ -12,9 +12,6 @@ homepage = "https://deltaml.org"
 keywords = ["machine-learning", "ml", "framework", "package-manager", "datasets"]
 
 [dependencies]
-tonic = { version = "0.12.3", features = ["transport", "codegen"] }
-tokio = { workspace = true }
-prost = "0.13.4"
 
 [build-dependencies]
 tonic-build = "0.12.3"
