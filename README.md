@@ -1,4 +1,23 @@
-# Nebula
+<div align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/delta-rs/resources/refs/heads/main/nebula/logo/nebula.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/delta-rs/resources/refs/heads/main/nebula/logo/nebula.svg">
+    <img alt="Nebula - A package manager for machine learning datasets and models."
+         src="https://raw.githubusercontent.com/delta-rs/resources/refs/heads/main/nebula/logo/nebula.svg"
+         width="55%">
+  </picture>
+
+<br/>
+<br/>
+
+![build](https://img.shields.io/github/actions/workflow/status/delta-rs/nebula/core.yml?branch=master) 
+[![discord badge]](https://discord.gg/g5HtkAzRNG)
+[![x handle]][x badge]
+</div>
+
+[x badge]: https://twitter.com/intent/follow?screen_name=deltaml_org
+[x handle]: https://img.shields.io/twitter/follow/deltaml_org.svg?style=social&label=Follow
+[discord badge]: https://img.shields.io/discord/1320514043424931861
 
 A package manager for machine learning datasets and models.
 
