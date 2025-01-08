@@ -10,13 +10,13 @@
 <br/>
 <br/>
 
-![build](https://img.shields.io/github/actions/workflow/status/delta-rs/nebula/core.yml?branch=master) 
+![build](https://img.shields.io/github/actions/workflow/status/blackportal-ai/nebula/core.yml?branch=master) 
 [![discord badge]](https://discord.gg/g5HtkAzRNG)
 [![x handle]][x badge]
 </div>
 
-[x badge]: https://twitter.com/intent/follow?screen_name=deltaml_org
-[x handle]: https://img.shields.io/twitter/follow/deltaml_org.svg?style=social&label=Follow
+[x badge]: https://twitter.com/intent/follow?screen_name=BlackPortal_AI
+[x handle]: https://img.shields.io/twitter/follow/BlackPortal_AI.svg?style=social&label=Follow
 [discord badge]: https://img.shields.io/discord/1320514043424931861
 
 A package manager for machine learning datasets and models.
