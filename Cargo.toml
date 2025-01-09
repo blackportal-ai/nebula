@@ -1,6 +1,16 @@
 [workspace]
-members = ["nebula_registry", "nebula_cli"]
+members = ["nebula_registry", "nebula_cli", "nebula_common"]
 resolver = "2"
 
 [workspace.dependencies]
-tokio = { version = "1.32.0", features = ["full"] }
+tokio = { version = "1.43", features = ["full"] }
+
+tonic = { version = "0.12" }
+prost = { version = "0.13" }
+prost-types = { version = "0.13" }
+
+dotenvy = { version = "0.15" }
+
+serde = { version = "1.0", features = ["derive"] }
+strum = "0.26"
+strum_macros = "0.26"

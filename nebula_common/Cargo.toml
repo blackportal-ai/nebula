@@ -1,0 +1,40 @@
+[package]
+name = "nebula_common"
+version = "0.1.0"
+edition = "2021"
+authors = ["Tim Janus <tim@janus.rs>"]
+description = "Library Crate with common functionality for the nebula-registry server and the local command line tool."
+license = "BSD-3-Clause"
+repository = "https://github.com/blackportal-ai/nebula"
+readme = "../README.md"
+rust-version = "1.83.0"
+homepage = "https://deltaml.org"
+keywords = [
+    "machine-learning",
+    "package-manager",
+    "framework",
+    "cli",
+    "datasets",
+]
+
+[dependencies]
+tokio.workspace = true
+
+tonic.workspace = true
+prost.workspace = true
+prost-types.workspace = true
+
+dotenvy.workspace = true
+
+strum.workspace = true
+strum_macros.workspace = true
+
+serde.workspace = true
+
+config = "0.15"
+
+[build-dependencies]
+tonic-build = "0.12.3"
+
+[dev-dependencies]
+tonic-build = "0.12.3"
