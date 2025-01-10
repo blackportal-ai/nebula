@@ -18,15 +18,8 @@ keywords = [
 ]
 
 [dependencies]
-tokio.workspace = true
 
 tonic.workspace = true
-prost.workspace = true
-prost-types.workspace = true
-
-dotenvy.workspace = true
-
-strum.workspace = true
 strum_macros.workspace = true
 
 serde.workspace = true
