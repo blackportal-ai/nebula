@@ -24,7 +24,4 @@ keywords = [
 tokio.workspace = true
 tonic.workspace = true
 
-strum.workspace = true
-strum_macros.workspace = true
-
 nebula_common = { path = "../nebula_common", version = "0.1" }
