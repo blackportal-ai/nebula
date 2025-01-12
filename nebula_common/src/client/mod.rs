@@ -7,7 +7,7 @@ use super::nebula_proto::{Empty, PackageInfo, PackageList, PackageRequest};
 
 pub async fn init_client(
     port: u16,
-) -> Result<NebulaRegistryClient<tonic::transport::Channel>, Box<dyn std::error::Error>> {
+) -> Result<NebulaRegistryClient<Channel>, Box<dyn std::error::Error>> {
     let client = NebulaRegistryClient::connect(format!("http://[127.0.0.1]:{}", port)).await?;
     Ok(client)
 }

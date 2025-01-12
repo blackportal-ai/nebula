@@ -28,7 +28,7 @@ impl NebulaRegistry for NebulaRegistryImpl {
     async fn list_packages(
         &self,
         request: Request<Empty>,
-    ) -> Result<tonic::Response<PackageList>, tonic::Status> {
+    ) -> Result<Response<PackageList>, tonic::Status> {
         println!("Got a request: {:?}", request);
 
         let response_body = PackageList { packages: vec![dummy_package()] };
