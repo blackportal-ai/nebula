@@ -1,0 +1,166 @@
+{
+    "name" : "cifar-10-binary",
+    "title" : "Cifar-10 60'000 32x32 coloured images in 10 classes",
+    "licenses": [{
+        "name": "custom",
+        "path": "https://www.cs.toronto.edu/~kriz/cifar.html",
+        "title": "Similar to CC-BY"
+    }],
+    "homepage": "https://www.cs.toronto.edu/~kriz/cifar.html",
+    "sources" : [{
+        "title": "Learning Multiple Layers of Features from Tiny Images",
+        "path": "https://www.cs.toronto.edu/~kriz/learning-features-2009-TR.pdf"
+    }],
+    "delta-ml": {
+        "category": "classification",
+        "classes": 10,
+        "training-count": 50000,
+        "validation-count": 0,
+        "test-count": 10000,
+        "input-shape": "32x32x3",
+        "mirror": "https://nebula.deltaml.org/cifar-10-binary"
+    },
+    "resources": [
+        {
+            "name": "Complete Archive",
+            "path": "https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz",
+            "title": "Cifar-10 Complete Archive",
+            "description": "Complete Cifar-10 archive for Download",
+            "format": "tar.gz",
+            "mediatype": "application/gzip",
+            "bytes": 170052171,
+            "delta-ml": {
+                "origin": "remote",
+                "local-storage": "temp"
+            }
+        },
+        {
+            "name": "Label Descriptive Names",
+            "path": "batches.meta.txt",
+            "title": "Descriptive Label Names",
+            "description": "Label names for Cifar-10",
+            "format": "txt",
+            "mediatype": "application/gzip",
+            "bytes": 170052171,
+            "delta-ml": {
+                "origin": "local-archive",
+                "format": "txt-label;newline",
+                "local-storage": "installed"
+            }
+        },
+        {
+            "name": "train-batch-1",
+            "path": "data_batch_1.bin",
+            "title": "Cifar-10 Training Binary Batch 1",
+            "description": "First 10'000 data points of CIFAR-10",
+            "format": "bin",
+            "mediatype": "application/octet-stream",
+            "encoding": "utf-8",
+            "bytes": 30730000,
+            "sources": [{
+                "title": "Part of Archive",
+                "path": "https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz"
+            }],
+            "delta-ml": {
+                "origin": "local-archive",
+                "format": "idx-ubyte:label;1,r;1024,g;1024,b;1024",
+                "local-storage": "installed"
+            }
+        },
+        {
+            "name": "train-batch-2",
+            "path": "data_batch_2.bin",
+            "title": "Cifar-10 Training Binary Batch 2",
+            "description": "Second 10'000 data points of CIFAR-10",
+            "format": "bin",
+            "mediatype": "application/octet-stream",
+            "encoding": "utf-8",
+            "bytes": 30730000,
+            "sources": [{
+                "title": "Part of Archive",
+                "path": "https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz"
+            }],
+            "delta-ml": {
+                "origin": "local-archive",
+                "format": "idx-ubyte:label;1,r;1024,g;1024,b;1024",
+                "local-storage": "installed"
+            }
+        },
+        {
+            "name": "train-batch-3",
+            "path": "data_batch_3.bin",
+            "title": "Cifar-10 Training Binary Batch 3",
+            "description": "Third 10'000 data points of CIFAR-10",
+            "format": "bin",
+            "mediatype": "application/octet-stream",
+            "encoding": "utf-8",
+            "bytes": 30730000,
+            "sources": [{
+                "title": "Part of Archive",
+                "path": "https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz"
+            }],
+            "delta-ml": {
+                "origin": "local-archive",
+                "format": "idx-ubyte:label;1,r;1024,g;1024,b;1024",
+                "local-storage": "installed"
+            }
+        },
+        {
+            "name": "train-batch-4",
+            "path": "data_batch_4.bin",
+            "title": "Cifar-10 Training Binary Batch 4",
+            "description": "Fourth 10'000 data points of CIFAR-10",
+            "format": "bin",
+            "mediatype": "application/octet-stream",
+            "encoding": "utf-8",
+            "bytes": 30730000,
+            "sources": [{
+                "title": "Part of Archive",
+                "path": "https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz"
+            }],
+            "delta-ml": {
+                "origin": "local-archive",
+                "format": "idx-ubyte:label;1,r;1024,g;1024,b;1024",
+                "local-storage": "installed"
+            }
+        },
+        {
+            "name": "train-batch-5",
+            "path": "data_batch_5.bin",
+            "title": "Cifar-10 Training Binary Batch 5",
+            "description": "Fifth 10'000 data points of CIFAR-10",
+            "format": "bin",
+            "mediatype": "application/octet-stream",
+            "encoding": "utf-8",
+            "bytes": 30730000,
+            "sources": [{
+                "title": "Part of Archive",
+                "path": "https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz"
+            }],
+            "delta-ml": {
+                "origin": "local-archive",
+                "format": "idx-ubyte:label;1,r;1024,g;1024,b;1024",
+                "local-storage": "installed"
+            }
+        },
+        {
+            "name": "test-batch",
+            "path": "test_batch",
+            "title": "Cifar-10 Test Binary Batch",
+            "description": "First 10'000 data points of CIFAR-10",
+            "format": "bin",
+            "mediatype": "application/octet-stream",
+            "encoding": "utf-8",
+            "bytes": 30730000,
+            "sources": [{
+                "title": "Part of Archive",
+                "path": "https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz"
+            }],
+            "delta-ml": {
+                "origin": "local-archive",
+                "format": "idx-ubyte:label;1,r;1024,g;1024,b;1024",
+                "local-storage": "installed"
+            }
+        }
+    ]
+  }
