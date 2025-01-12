@@ -1,7 +1,7 @@
 use super::nebula_registry_server::NebulaRegistry;
 use super::{Empty, PackageInfo, PackageList, PackageRequest};
 
-use tonic::{Request, Response};
+use tonic::{Request, Response, Status};
 
 #[derive(Debug, Default)]
 pub struct NebulaRegistryImpl {}
@@ -19,7 +19,7 @@ impl NebulaRegistry for NebulaRegistryImpl {
     async fn get_package_info(
         &self,
         request: Request<PackageRequest>,
-    ) -> Result<Response<PackageInfo>, tonic::Status> {
+    ) -> Result<Response<PackageInfo>, Status> {
         println!("Got a request: {:?}", request);
 
         Ok(Response::new(dummy_package()))
@@ -28,7 +28,7 @@ impl NebulaRegistry for NebulaRegistryImpl {
     async fn list_packages(
         &self,
         request: Request<Empty>,
-    ) -> Result<tonic::Response<PackageList>, tonic::Status> {
+    ) -> Result<Response<PackageList>, Status> {
         println!("Got a request: {:?}", request);
 
         let response_body = PackageList { packages: vec![dummy_package()] };
