@@ -18,11 +18,11 @@
         "validation-count": 0,
         "test-count": 0,
         "input-shape": "4x1x1",
-        "mirror": "https://nebula.deltaml.org/iris-classical"
+        "mirror": "https://nebula.blackportal.ai/iris-classical"
     },
     "resources": [
         {
-            "name": "Iris-Table",
+            "name": "iris-table",
             "path": "iris.csv",
             "title": "The Solar System",
             "description": "Data about the flower species: Iris Setosa, Iris Versicolour and Iris Virginica",

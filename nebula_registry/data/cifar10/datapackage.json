@@ -18,11 +18,11 @@
         "validation-count": 0,
         "test-count": 10000,
         "input-shape": "32x32x3",
-        "mirror": "https://nebula.deltaml.org/cifar-10-binary"
+        "mirror": "https://nebula.blackportal.ai/cifar-10-binary"
     },
     "resources": [
         {
-            "name": "Complete Archive",
+            "name": "complete-archive",
             "path": "https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz",
             "title": "Cifar-10 Complete Archive",
             "description": "Complete Cifar-10 archive for Download",
@@ -35,7 +35,7 @@
             }
         },
         {
-            "name": "Label Descriptive Names",
+            "name": "label-descriptive-names",
             "path": "batches.meta.txt",
             "title": "Descriptive Label Names",
             "description": "Label names for Cifar-10",
