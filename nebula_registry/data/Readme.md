@@ -8,7 +8,7 @@ The inbuild extensions [Table Dialect](https://datapackage.org/standard/table-di
 
 ## Dataset
 
-Additonally to the table extensions, we add an extension `delta-ml` on both the data package level and the resource, i.e. file, level.
+Additonally to the table extensions, we add an extension `delta` on both the data package level and the resource, i.e. file, level.
 
 Datasets come in different forms, these are three examples with rising complexity:
 
@@ -16,7 +16,7 @@ Datasets come in different forms, these are three examples with rising complexit
 2. [Cifar-10](https://www.cs.toronto.edu/~kriz/cifar.html) - An image classification dataset that uses the IDX/UByte format 
 3. [Coco](https://cocodataset.org/#home) - An image segmentation dataset. TODO
 
-### The delta-ml extension
+### The delta extension
 
 On package level we add:
 

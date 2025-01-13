@@ -11,7 +11,7 @@
         "title": "The iris data set: In search of the source of virginica",
         "path": "https://www.semanticscholar.org/paper/The-iris-data-set%3A-In-search-of-the-source-of-Unwin-Kleinman/4599862ea877863669a6a8e63a3c707a787d5d7e"
     }],
-    "delta-ml": {
+    "delta": {
         "category": "classification",
         "classes": 3,
         "training-count": 150,
@@ -43,7 +43,7 @@
                     { "name": "species", "type": "string"}
                 ]
             },
-            "delta-ml": {
+            "delta": {
                 "origin": "registry",
                 "format": "csv",
                 "local-storage": "installed"

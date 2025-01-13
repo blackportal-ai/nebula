@@ -11,7 +11,7 @@
         "title": "Learning Multiple Layers of Features from Tiny Images",
         "path": "https://www.cs.toronto.edu/~kriz/learning-features-2009-TR.pdf"
     }],
-    "delta-ml": {
+    "delta": {
         "category": "classification",
         "classes": 10,
         "training-count": 50000,
@@ -29,7 +29,7 @@
             "format": "tar.gz",
             "mediatype": "application/gzip",
             "bytes": 170052171,
-            "delta-ml": {
+            "delta": {
                 "origin": "remote",
                 "local-storage": "temp"
             }
@@ -42,7 +42,7 @@
             "format": "txt",
             "mediatype": "application/gzip",
             "bytes": 170052171,
-            "delta-ml": {
+            "delta": {
                 "origin": "local-archive",
                 "format": "txt-label;newline",
                 "local-storage": "installed"
@@ -61,7 +61,7 @@
                 "title": "Part of Archive",
                 "path": "https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz"
             }],
-            "delta-ml": {
+            "delta": {
                 "origin": "local-archive",
                 "format": "idx-ubyte:label;1,r;1024,g;1024,b;1024",
                 "local-storage": "installed"
@@ -80,7 +80,7 @@
                 "title": "Part of Archive",
                 "path": "https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz"
             }],
-            "delta-ml": {
+            "delta": {
                 "origin": "local-archive",
                 "format": "idx-ubyte:label;1,r;1024,g;1024,b;1024",
                 "local-storage": "installed"
@@ -99,7 +99,7 @@
                 "title": "Part of Archive",
                 "path": "https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz"
             }],
-            "delta-ml": {
+            "delta": {
                 "origin": "local-archive",
                 "format": "idx-ubyte:label;1,r;1024,g;1024,b;1024",
                 "local-storage": "installed"
@@ -118,7 +118,7 @@
                 "title": "Part of Archive",
                 "path": "https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz"
             }],
-            "delta-ml": {
+            "delta": {
                 "origin": "local-archive",
                 "format": "idx-ubyte:label;1,r;1024,g;1024,b;1024",
                 "local-storage": "installed"
@@ -137,7 +137,7 @@
                 "title": "Part of Archive",
                 "path": "https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz"
             }],
-            "delta-ml": {
+            "delta": {
                 "origin": "local-archive",
                 "format": "idx-ubyte:label;1,r;1024,g;1024,b;1024",
                 "local-storage": "installed"
@@ -156,7 +156,7 @@
                 "title": "Part of Archive",
                 "path": "https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz"
             }],
-            "delta-ml": {
+            "delta": {
                 "origin": "local-archive",
                 "format": "idx-ubyte:label;1,r;1024,g;1024,b;1024",
                 "local-storage": "installed"
