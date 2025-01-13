@@ -51,6 +51,8 @@ Like MINST a popular dataset for image classification.
 
 See the [datapackage.json](./cifar10/datapackage.json)
 
+REMARK: Move cifar-10-binary.tar.gz to the cifar-10 data folder and extract it - It will be ignored by git but not by docker. So it is on the filesystem of the docker deployment of `nebula_registry`.
+
 License is similar to CC-BY
 
 ### Coco
