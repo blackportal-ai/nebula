@@ -132,3 +132,7 @@ rust-project.json
 
 # Flamegraph
 *.svg
+
+# Datapackagge
+nebula_registry/data/cifar10/* 
+!nebula_registry/data/cifar10/datapackage.json

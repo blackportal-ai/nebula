@@ -13,6 +13,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let addr = format!("{}:{}", app_conf.host, app_conf.port).parse()?;
     let registry = NebulaRegistryImpl::default();
 
+    println!("Nebula Registry v0.1.0 - running on: '{}'", addr);
     Server::builder().add_service(NebulaRegistryServer::new(registry)).serve(addr).await?;
 
     Ok(())

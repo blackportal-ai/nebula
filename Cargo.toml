@@ -3,7 +3,7 @@ members = ["nebula_registry", "nebula_cli", "nebula_common"]
 resolver = "2"
 
 [workspace.dependencies]
-tokio = { version = "1.43", features = ["full"] }
+tokio = { version = "1.43", features = ["rt-multi-thread"] }
 
 tonic = { version = "0.12" }
 prost = { version = "0.13" }

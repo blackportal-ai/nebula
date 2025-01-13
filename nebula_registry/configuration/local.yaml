@@ -1,3 +1,3 @@
 application:
-  host: 127.0.0.1
+  host: 0.0.0.0 # this ensures connection are accepted by all network devices
   base_url: http://127.0.0.1

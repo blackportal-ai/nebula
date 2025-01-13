@@ -1,0 +1,53 @@
+{
+    "name" : "iris-classical",
+    "title" : "Iris flower dataset",
+    "licenses": [{
+        "name": "CC-BY 4.0",
+        "path": "https://creativecommons.org/licenses/by/4.0/legalcode",
+        "title": "CC-BY 4.0"
+    }],
+    "homepage": "https://archive.ics.uci.edu/dataset/53/iris",
+    "sources" : [{
+        "title": "The iris data set: In search of the source of virginica",
+        "path": "https://www.semanticscholar.org/paper/The-iris-data-set%3A-In-search-of-the-source-of-Unwin-Kleinman/4599862ea877863669a6a8e63a3c707a787d5d7e"
+    }],
+    "delta": {
+        "category": "classification",
+        "classes": 3,
+        "training-count": 150,
+        "validation-count": 0,
+        "test-count": 0,
+        "input-shape": "4x1x1",
+        "mirror": "https://nebula.blackportal.ai/iris-classical"
+    },
+    "resources": [
+        {
+            "name": "iris-table",
+            "path": "iris.csv",
+            "title": "The Solar System",
+            "description": "Data about the flower species: Iris Setosa, Iris Versicolour and Iris Virginica",
+            "format": "csv",
+            "mediatype": "text/csv",
+            "encoding": "utf-8",
+            "bytes": 3858,
+            "dialect": {
+                "header": true,
+                "delimiter": ","
+            },
+            "schema": {
+                "fields": [
+                    { "name": "sepal_length", "type": "number"},
+                    { "name": "sepal_width", "type": "number"},
+                    { "name": "petal_length", "type": "number"},
+                    { "name": "petal_width", "type": "number"},
+                    { "name": "species", "type": "string"}
+                ]
+            },
+            "delta": {
+                "origin": "registry",
+                "format": "csv",
+                "local-storage": "installed"
+            }
+        }
+    ]
+}
