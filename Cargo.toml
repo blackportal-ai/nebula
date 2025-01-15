@@ -1,5 +1,5 @@
 [workspace]
-members = ["nebula_registry", "nebula_cli", "nebula_common"]
+members = ["nebula_registry", "nebula_cli", "nebula_common", "nebula_tests"]
 resolver = "2"
 
 [workspace.dependencies]
