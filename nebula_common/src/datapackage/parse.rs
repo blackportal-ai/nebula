@@ -1,7 +1,30 @@
+//! The module is responsible to provide pods (plain old structs) for datapackage. These are useful for input before validation.
+//!
+//! The module adds parsing via [serde] use the function [datapackage_meta_from_file_not_validated] to read a datapackage json file.
+//! Most users want to use [super::datapackage_meta_from_file] to get a validated datapackage though.
+
 use std::collections::HashMap;
+use std::fs::File;
+use std::io::Read;
+use std::path::Path;
 
 use serde::Deserialize;
 use serde::Serialize;
+
+/// Reads a json file that contains the datapackage descriptor as json the received data is not checked for validity
+///
+/// filepath: A path on the filesystem
+pub fn datapackage_meta_from_file_not_validated(
+    filepath: &Path,
+) -> Result<DataPackageNotValidated, std::io::Error> {
+    let mut file = File::open(filepath)?;
+
+    let mut buf = String::new();
+    file.read_to_string(&mut buf)?;
+
+    let reval: DataPackageNotValidated = serde_json::from_str(buf.as_str())?;
+    Ok(reval)
+}
 
 /// A mapping for the Data Package json format that is not validated in respect to the schema.
 #[derive(Serialize, Deserialize)]
@@ -178,7 +201,7 @@ mod tests {
             }
             "#;
 
-        // todo reintegrate test
+        // todo: reintegrate test
         //let data_resource: DataResourceNotValidated = serde_json::from_str(json).unwrap();
         //assert_eq!(data_resource.name, "Inline Data Resource".to_string());
     }

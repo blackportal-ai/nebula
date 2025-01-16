@@ -1,69 +1,101 @@
-//! The module is responsible to validate parsed json input or to validate user-input over the UI.
+//! The module is responsible to validate [pod] of datapackage to ensure they fulfill the underlying schema.
 //!
 //! The datapackage standard stores [Profiles](https://datapackage.org/standard/glossary/#profile)
 //! in JSON schema draft 7 - so someday in the future we want to ensure that we work with valid data
 //! in respect to the given schema.
+//!
+//! Not implemented yet.
+
+use std::ops::Deref;
 
 use super::{
     DataPackageNotValidated, DataResourceNotValidated, DeltaDataPackageNotValidated,
     DeltaDataResourceNotValidated,
 };
 
-/// A trait that validates the datapackage standard data structures from the [crate::datapackge::parsed] module.
-///
-/// This trait is used as a marker trait for a TryFrom implementation.
-pub trait Validatable {
-    type Validated;
-    type Error;
-    fn validate(self) -> Result<Self::Validated, Self::Error>;
-}
-
+#[allow(dead_code)]
+#[derive(Debug, strum_macros::Display)]
 pub enum ValidationError {
     InvalidName,
+    InvalidID,
     InvalidURL,
     InvalidEmail,
+    InvalidResources,
     // ...
 }
 
-//impl std::error::Error for ValidationError {}
+impl std::error::Error for ValidationError {}
 
-pub struct DataPackage(DataPackageNotValidated);
-impl Validatable for DataPackageNotValidated {
+/// A trait that validates the datapackage standard from structures of the [crate::datapackge::parsed] module.
+///
+///
+pub trait ValidateData {
+    type Validated;
+    fn validate(self) -> Result<Self::Validated, ValidationError>;
+}
+
+pub struct Validated<T: Sized>(T);
+impl<T: Sized> Validated<T> {
+    pub fn into_inner(self) -> T {
+        self.0
+    }
+
+    /// Don't use this method, use [ValidateData::validate] instead.
+    pub fn unchecked_from(from: T) -> Self {
+        Validated(from)
+    }
+}
+
+impl<T> Deref for Validated<T> {
+    type Target = T;
+
+    fn deref(&self) -> &T {
+        &self.0
+    }
+}
+
+/// A data package that contains schema validated data (schema validation not implemented yet)
+pub type DataPackage = Validated<DataPackageNotValidated>;
+impl Validated<DataPackageNotValidated> {}
+impl ValidateData for DataPackageNotValidated {
     type Validated = DataPackage;
-    type Error = ValidationError;
 
     fn validate(self) -> Result<Self::Validated, ValidationError> {
-        // todo: validation check
-        Ok(DataPackage(self))
+        if self.resources.is_empty() {
+            return Err(ValidationError::InvalidResources);
+        }
+
+        // todo: remaining validation checks
+        Ok(DataPackage::unchecked_from(self))
     }
 }
 
-pub struct DataResource(DataResourceNotValidated);
-impl Validatable for DataResourceNotValidated {
+pub type DataResource = Validated<DataResourceNotValidated>;
+impl ValidateData for DataResourceNotValidated {
     type Validated = DataResource;
-    type Error = ValidationError;
 
-    fn validate(self) -> Result<Self::Validated, Self::Error> {
-        Ok(DataResource(self))
+    fn validate(self) -> Result<Self::Validated, ValidationError> {
+        // todo: remaining validation checks
+        Ok(DataResource::unchecked_from(self))
     }
 }
 
-pub struct DeltaDataPackage(DeltaDataPackageNotValidated);
-impl Validatable for DeltaDataPackageNotValidated {
+pub type DeltaDataPackage = Validated<DeltaDataPackageNotValidated>;
+impl ValidateData for DeltaDataPackageNotValidated {
     type Validated = DeltaDataPackage;
-    type Error = ValidationError;
 
-    fn validate(self) -> Result<Self::Validated, Self::Error> {
-        Ok(DeltaDataPackage(self))
+    fn validate(self) -> Result<Self::Validated, ValidationError> {
+        // todo: remaining validation checks
+        Ok(DeltaDataPackage::unchecked_from(self))
     }
 }
 
-pub struct DeltaDataResource(DeltaDataResourceNotValidated);
-impl Validatable for DeltaDataResourceNotValidated {
+pub type DeltaDataResource = Validated<DeltaDataResourceNotValidated>;
+impl ValidateData for DeltaDataResourceNotValidated {
     type Validated = DeltaDataResource;
-    type Error = ValidationError;
 
-    fn validate(self) -> Result<Self::Validated, Self::Error> {
-        Ok(DeltaDataResource(self))
+    fn validate(self) -> Result<Self::Validated, ValidationError> {
+        // todo: remaining validation checks
+        Ok(DeltaDataResource::unchecked_from(self))
     }
 }
