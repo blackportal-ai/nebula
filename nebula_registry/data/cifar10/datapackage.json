@@ -17,7 +17,7 @@
         "training-count": 50000,
         "validation-count": 0,
         "test-count": 10000,
-        "input-shape": "32x32x3",
+        "input_shape": "32x32x3",
         "mirror": "https://nebula.blackportal.ai/cifar-10-binary"
     },
     "resources": [
@@ -31,7 +31,7 @@
             "bytes": 170052171,
             "delta": {
                 "origin": "remote",
-                "local-storage": "temp"
+                "local_storage": "temp"
             }
         },
         {
@@ -45,7 +45,7 @@
             "delta": {
                 "origin": "local-archive",
                 "format": "txt-label;newline",
-                "local-storage": "installed"
+                "local_storage": "installed"
             }
         },
         {
@@ -64,7 +64,7 @@
             "delta": {
                 "origin": "local-archive",
                 "format": "idx-ubyte:label;1,r;1024,g;1024,b;1024",
-                "local-storage": "installed"
+                "local_storage": "installed"
             }
         },
         {
@@ -83,7 +83,7 @@
             "delta": {
                 "origin": "local-archive",
                 "format": "idx-ubyte:label;1,r;1024,g;1024,b;1024",
-                "local-storage": "installed"
+                "local_storage": "installed"
             }
         }
     ]

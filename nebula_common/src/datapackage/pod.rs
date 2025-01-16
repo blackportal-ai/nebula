@@ -11,6 +11,9 @@ use std::path::Path;
 use serde::Deserialize;
 use serde::Serialize;
 
+use super::DeltaDataPackageNotValidated;
+use super::DeltaDataResourceNotValidated;
+
 /// Reads a json file that contains the datapackage descriptor as json the received data is not checked for validity
 ///
 /// filepath: A path on the filesystem
@@ -57,6 +60,8 @@ pub struct DataPackageNotValidated {
     pub contributor: Option<Vec<DataPackageContributor>>,
 
     pub sources: Option<Vec<DataPackageSource>>,
+
+    pub delta: Option<DeltaDataPackageNotValidated>,
 }
 
 /// A mapping for the Data Resource json format that is not validated in respect to the schema.
@@ -86,6 +91,8 @@ pub struct DataResourceNotValidated {
     hash: Option<String>,
 
     sources: Option<Vec<DataPackageSource>>,
+
+    delta: Option<DeltaDataResourceNotValidated>,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -194,7 +201,7 @@ mod tests {
 
     #[test]
     fn test_deserialize_data_resource_with_inline_data_as_json_object() {
-        let json = r#"
+        let _json = r#"
             {
                 "name": "Inline Data Resource",
                 "data": {"a": 22, "b": "a string", "c": [1, 2, 3]}

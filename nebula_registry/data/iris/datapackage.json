@@ -17,7 +17,7 @@
         "training-count": 150,
         "validation-count": 0,
         "test-count": 0,
-        "input-shape": "4x1x1",
+        "input_shape": "4x1x1",
         "mirror": "https://nebula.blackportal.ai/iris-classical"
     },
     "resources": [
@@ -46,7 +46,7 @@
             "delta": {
                 "origin": "registry",
                 "format": "csv",
-                "local-storage": "installed"
+                "local_storage": "installed"
             }
         }
     ]
