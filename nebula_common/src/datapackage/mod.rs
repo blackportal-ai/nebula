@@ -4,22 +4,20 @@
 //! are omitted for now. The delta extension to the data package standard is implemented in the
 //! structs [DeltaDataPackage] and [DeltaDataResource].
 //!
-//! We use the module [parse] for parsing based on [serde]. The [validated] module contains the
+//! We use the module [pod] for parsing based on [serde]. The [validated] module contains the
 //! types that are valid in respect to the schema of the data package standard.
-//!
-//! The [validated::Validate::<T>]
 
 mod delta;
-mod parse;
+mod pod;
 mod validated;
 
 use std::path::Path;
 
 pub use delta::DeltaDataPackageNotValidated;
 pub use delta::DeltaDataResourceNotValidated;
-pub use parse::DataPackageNotValidated;
-pub use parse::DataResourceNotValidated;
-pub use parse::datapackage_meta_from_file_not_validated;
+pub use pod::DataPackageNotValidated;
+pub use pod::DataResourceNotValidated;
+pub use pod::datapackage_meta_from_file_not_validated;
 
 pub use validated::DataPackage;
 pub use validated::DataResource;

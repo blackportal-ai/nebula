@@ -34,6 +34,7 @@ pub trait ValidateData {
     fn validate(self) -> Result<Self::Validated, ValidationError>;
 }
 
+/// A wrapper typ that marks input data as validated
 pub struct Validated<T: Sized>(T);
 impl<T: Sized> Validated<T> {
     pub fn into_inner(self) -> T {
@@ -54,7 +55,7 @@ impl<T> Deref for Validated<T> {
     }
 }
 
-/// A data package that contains schema validated data (schema validation not implemented yet)
+/// A data package that has it's schema validated (validation not implemented yet)
 pub type DataPackage = Validated<DataPackageNotValidated>;
 impl Validated<DataPackageNotValidated> {}
 impl ValidateData for DataPackageNotValidated {
@@ -70,6 +71,7 @@ impl ValidateData for DataPackageNotValidated {
     }
 }
 
+/// A data resource that has it's schema validated (validation not implemented yet)
 pub type DataResource = Validated<DataResourceNotValidated>;
 impl ValidateData for DataResourceNotValidated {
     type Validated = DataResource;
@@ -80,6 +82,7 @@ impl ValidateData for DataResourceNotValidated {
     }
 }
 
+/// A delta data package extension that has it's schema validated (validation not implemented yet)
 pub type DeltaDataPackage = Validated<DeltaDataPackageNotValidated>;
 impl ValidateData for DeltaDataPackageNotValidated {
     type Validated = DeltaDataPackage;
@@ -90,6 +93,7 @@ impl ValidateData for DeltaDataPackageNotValidated {
     }
 }
 
+/// A delta data resource extension that has it's schema validated (validation not implemented yet)
 pub type DeltaDataResource = Validated<DeltaDataResourceNotValidated>;
 impl ValidateData for DeltaDataResourceNotValidated {
     type Validated = DeltaDataResource;
