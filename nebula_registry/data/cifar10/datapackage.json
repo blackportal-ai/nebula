@@ -17,7 +17,7 @@
         "training-count": 50000,
         "validation-count": 0,
         "test-count": 10000,
-        "input-shape": "32x32x3",
+        "input_shape": "32x32x3",
         "mirror": "https://nebula.blackportal.ai/cifar-10-binary"
     },
     "resources": [
@@ -31,7 +31,7 @@
             "bytes": 170052171,
             "delta": {
                 "origin": "remote",
-                "local-storage": "temp"
+                "local_storage": "temp"
             }
         },
         {
@@ -45,18 +45,18 @@
             "delta": {
                 "origin": "local-archive",
                 "format": "txt-label;newline",
-                "local-storage": "installed"
+                "local_storage": "installed"
             }
         },
         {
-            "name": "train-batch-1",
-            "path": "data_batch_1.bin",
+            "name": "train-batch",
+            "path": ["data_batch_1.bin", "data_batch_2.bin", "data_batch_3.bin", "data_batch_4.bin", "data_batch_5.bin"],
             "title": "Cifar-10 Training Binary Batch 1",
             "description": "First 10'000 data points of CIFAR-10",
             "format": "bin",
             "mediatype": "application/octet-stream",
             "encoding": "utf-8",
-            "bytes": 30730000,
+            "bytes": 153650000,
             "sources": [{
                 "title": "Part of Archive",
                 "path": "https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz"
@@ -64,83 +64,7 @@
             "delta": {
                 "origin": "local-archive",
                 "format": "idx-ubyte:label;1,r;1024,g;1024,b;1024",
-                "local-storage": "installed"
-            }
-        },
-        {
-            "name": "train-batch-2",
-            "path": "data_batch_2.bin",
-            "title": "Cifar-10 Training Binary Batch 2",
-            "description": "Second 10'000 data points of CIFAR-10",
-            "format": "bin",
-            "mediatype": "application/octet-stream",
-            "encoding": "utf-8",
-            "bytes": 30730000,
-            "sources": [{
-                "title": "Part of Archive",
-                "path": "https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz"
-            }],
-            "delta": {
-                "origin": "local-archive",
-                "format": "idx-ubyte:label;1,r;1024,g;1024,b;1024",
-                "local-storage": "installed"
-            }
-        },
-        {
-            "name": "train-batch-3",
-            "path": "data_batch_3.bin",
-            "title": "Cifar-10 Training Binary Batch 3",
-            "description": "Third 10'000 data points of CIFAR-10",
-            "format": "bin",
-            "mediatype": "application/octet-stream",
-            "encoding": "utf-8",
-            "bytes": 30730000,
-            "sources": [{
-                "title": "Part of Archive",
-                "path": "https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz"
-            }],
-            "delta": {
-                "origin": "local-archive",
-                "format": "idx-ubyte:label;1,r;1024,g;1024,b;1024",
-                "local-storage": "installed"
-            }
-        },
-        {
-            "name": "train-batch-4",
-            "path": "data_batch_4.bin",
-            "title": "Cifar-10 Training Binary Batch 4",
-            "description": "Fourth 10'000 data points of CIFAR-10",
-            "format": "bin",
-            "mediatype": "application/octet-stream",
-            "encoding": "utf-8",
-            "bytes": 30730000,
-            "sources": [{
-                "title": "Part of Archive",
-                "path": "https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz"
-            }],
-            "delta": {
-                "origin": "local-archive",
-                "format": "idx-ubyte:label;1,r;1024,g;1024,b;1024",
-                "local-storage": "installed"
-            }
-        },
-        {
-            "name": "train-batch-5",
-            "path": "data_batch_5.bin",
-            "title": "Cifar-10 Training Binary Batch 5",
-            "description": "Fifth 10'000 data points of CIFAR-10",
-            "format": "bin",
-            "mediatype": "application/octet-stream",
-            "encoding": "utf-8",
-            "bytes": 30730000,
-            "sources": [{
-                "title": "Part of Archive",
-                "path": "https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz"
-            }],
-            "delta": {
-                "origin": "local-archive",
-                "format": "idx-ubyte:label;1,r;1024,g;1024,b;1024",
-                "local-storage": "installed"
+                "local_storage": "installed"
             }
         },
         {
@@ -159,7 +83,7 @@
             "delta": {
                 "origin": "local-archive",
                 "format": "idx-ubyte:label;1,r;1024,g;1024,b;1024",
-                "local-storage": "installed"
+                "local_storage": "installed"
             }
         }
     ]

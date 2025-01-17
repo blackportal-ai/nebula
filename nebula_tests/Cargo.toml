@@ -1,14 +1,11 @@
 [package]
-name = "nebula_registry"
+name = "nebula_tests"
 version = "0.1.0"
 edition = "2021"
-authors = [
-    "Marcus Cvjeticanin <mjovanc@icloud.com>",
-    "Tim Janus <tim@janus.rs>",
-]
+authors = ["Tim Janus <tim@janus.rs>"]
 description = "A package manager for machine learning datasets and models."
 license = "BSD-3-Clause"
-repository = "https://github.com/blackportal-ai/nebula"
+repository = "https://blackportal-ai/delta-rs/nebula"
 readme = "../README.md"
 rust-version = "1.83.0"
 homepage = "https://blackportal.ai"
@@ -21,7 +18,7 @@ keywords = [
 ]
 
 [dependencies]
-tokio.workspace = true
-tonic.workspace = true
-
 nebula_common = { path = "../nebula_common", version = "0.1" }
+
+serde_json.workspace = true
+serde.workspace = true
