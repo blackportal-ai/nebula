@@ -1,24 +1,124 @@
 syntax = "proto3";
 
-package nebula;
+/**
+ *  The Nebula Registry interface in version v1 - this is not stable yet.
+ *
+ *  Focused on querying meta informaton
+ *  Open:
+ *  - Download needed files for installation
+ *  - Authentication
+ *  - Publishing models and datasets
+ */
+package nebula.v1;
 
-service NebulaRegistry {
+/**
+ *  A service responsible to provide package information to a client.
+ *  
+ *  By using this service a client should be able to receive all meta-data about a dataset or model
+ */
+service NebulaPackageQuery {
+    // Gets detailed information for one specific package
     rpc GetPackageInfo (PackageRequest) returns (PackageInfo);
-    rpc ListPackages (Empty) returns (PackageList);
+
+    // List all packages with very simple search criteria (substring search)
+    rpc ListPackages (ListPackagesRequest) returns (PackageList);
+
+    // Search packages applying several filters
+    rpc SearchPackages (SearchPackagesRequest) returns (PackageList);
 }
 
+// used for extended error reporting
+message ErrorDetail {
+    string reason = 1;
+    string hint = 2;
+}
+
+message DateRange {
+    optional string start = 1;  // YYYYMMDD - ISO 8601 format
+    optional string end = 2;    // YYYYMMDD - ISO 8601 format
+}
+
+enum PackageType {
+    BOTH    = 0;            // Retrive both datasets and models
+    DATASET = 1;            // Retrive only datasets
+    MODEL   = 2;            // Retrive only models
+}
+
+enum SearchKind {
+    RELAXED = 0;                // Searches for word-wise substrings in package name, authors and description in the same preference 
+    SUBSTR_PACKAGE_NAME = 1;    // Searches for substring in package name
+    SUBSTR_AUTHOR = 2;          // Searches for substring in author
+}
+
+enum SortOption {
+    CREATION_DATE   = 0;    // Sort by creation date
+    DOWNLOADS       = 1;    // Sort by download count descending
+    NAME            = 2;    // Sort Alphabetical by name
+}
+
+message SortParameter {
+    SortOption sort_by = 1;         // Sort option
+    optional bool descending = 2;   // Sort direction, default: ascending
+}
+
+message FieldOptions {
+    bool include_datapackage_json = 1;
+    bool include_preview_images = 2;
+}
+
+
+// message returns complete package info
 message PackageRequest {
-    string name = 1;
+    string search_query = 1;                // searches for EXACT package-name
+    PackageType package_type = 2;           // filters by dataset, model or both
+}
+
+message ListPackagesRequest {
+    FieldOptions field_options = 1;         // additional fields, like datapackage json or preview image
+    PackageType package_type = 2;           // filters by dataset, model or both
+    optional SortOption sort = 3;           // Sorting options
+    optional int32 limit = 4;               // Limit the number of results
+    optional int32 offset = 5;              // For pagination
+}
+
+message SearchPackagesRequest {
+    FieldOptions field_options = 1;         // additional fields, like datapackage json or preview image
+    string search_query = 2;                // General text search across multiple fields
+    PackageType package_type = 3;           // filters by dataset, model or both
+    repeated SortOption sort = 4;           // Sorting options, with support for different levels
+    optional int32 limit = 5;               // Limit the number of results
+    optional int32 offset = 6;              // For pagination
+    optional DateRange created_date = 7;    // Filter by creation date
+    optional DateRange updated_date = 8;    // Filter by last update date
+    optional SearchKind kind = 9;           // Search method (e.g., RELAXED, SUBSTR_PACKAGE_NAME)
+    repeated string authors = 10;           // Search by author(s)
+    optional int32 min_downloads = 11;      // Minimum number of downloads 
+    optional int32 max_downloads = 12;      // Maximum number of downloads
 }
 
 message PackageInfo {
     string name = 1;
     string version = 2;
     string description = 3;
+    uint64 download_size = 4;
+    uint64 installed_size = 5;
+    string license = 6;
+    optional string datapackage_json = 7;   // json string of datapackage json with delta extension
+    repeated string preview_images = 8;     // url or base64 encoded inline image
 }
 
 message PackageList {
-    repeated PackageInfo packages = 1;
+    repeated PackageInfo packages = 1; // List of package information
+    int32 total_count = 2;             // only set if pagiation was used
+    optional int32 limit = 3;          // only set if pagiation was used
+    optional int32 offset = 4;         // only set if pagiation was used
 }
 
 message Empty {}
+
+/**
+ * Service to publish packages on a Nebula registry, we'll do that later
+ */
+service NebulaPublisher {
+    rpc PublishPackage(Empty) returns (Empty);
+}
