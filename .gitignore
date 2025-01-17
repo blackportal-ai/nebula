@@ -136,3 +136,5 @@ rust-project.json
 # Datapackagge
 nebula_registry/data/cifar10/* 
 !nebula_registry/data/cifar10/datapackage.json
+nebula_registry/data/mobilenetv3_tf2/*
+!nebula_registry/data/mobilenetv3_tf2/datapackage.json
