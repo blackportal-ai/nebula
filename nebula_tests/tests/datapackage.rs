@@ -33,3 +33,17 @@ fn test_load_iris() -> Result<(), Box<dyn std::error::Error>> {
 
     Ok(())
 }
+#[test]
+fn test_load_mobilenetv3_tf2() -> Result<(), Box<dyn std::error::Error>> {
+    // todo: also test validation
+    let filepath = "../nebula_registry/data/mobilenetv3_tf2/datapackage.json";
+    let dp = datapackage_meta_from_file_not_validated(Path::new(filepath))?;
+
+    assert_eq!(dp.title, Some("Mobilenet V3 Tensorflow Model v2".to_string()));
+    assert!(dp.delta.is_some());
+    let delta = dp.delta.unwrap();
+    assert_eq!(delta.classes.unwrap(), 1000);
+    // todo: more tests
+
+    Ok(())
+}

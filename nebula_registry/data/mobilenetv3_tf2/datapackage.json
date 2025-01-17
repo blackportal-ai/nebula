@@ -1,0 +1,72 @@
+{
+    "name" : "mobilenet_v3_tf2",
+    "title" : "Mobilenet V3 Tensorflow Model v2",
+    "licenses": [{
+        "name": "APACHE 2.0",
+        "path": "https://www.apache.org/licenses/LICENSE-2.0",
+        "title": "Similar to CC-BY"
+    }],
+    "homepage": "https://www.kaggle.com/models/google/mobilenet-v3/",
+    "delta": {
+        "category": "classification",
+        "classes": 1000,
+        "input_shape": "224x224x3",
+        "mirror": "https://nebula.blackportal.ai/mobilenet_v3_tf2"
+    },
+    "resources": [
+        {
+            "name": "complete-archive",
+            "path": "https://storage.googleapis.com/kaggle-models-data/2422/3266/bundle/archive.tar.gz?GoogleAccessId=web-data@kaggle-161607.iam.gserviceaccount.com&Expires=1737385495&Signature=rZQddGehJ34CIDLz9cfhgJQthkaXv17dx0L3cZrRVI7AcXGv4hmdPCJIviCU9%2Bq9EYnFy%2F0OEoSua4TpzXJ7c1sP%2FrbJqBlfMif66JrXh63uUpzJl5zLYAnHFqbZJ6U7FGwSodAzGen8%2FC95BtVi6ve6tLmnfrfImJDu%2BQCwW8AVOOFBrKRwQ%2FzLV5RnJuhqegZ34AMU6983nfMrrbZSHUtfSFOnNTJE%2BibreDRUv8UHnnrq%2BK2ZGMHMEtZ4HUK4NrBXgX1qBYof%2FKpmlym9zSZC4IGOJ0q8U3ql3Rmu6y5LyOTApj%2BePh21nqTlZ3VSnZVavoeQ781hUMlzGWMbKA%3D%3D&response-content-disposition=attachment%3B+filename%3Dmobilenet-v3-tensorflow2-large-075-224-classification-v1.tar.gz",
+            "title": "Mobilenet v3 complete archive",
+            "description": "Complete Mobilenetv3 TF2 Savemodel for Download",
+            "format": "tar.gz",
+            "mediatype": "application/gzip",
+            "bytes": 17528126,
+            "delta": {
+                "origin": "remote",
+                "local_storage": "temp"
+            }
+        },
+        {
+            "name": "saved_model",
+            "path": "saved_model.pb",
+            "title": "Protobuf File of TF2 SaveModel Format",
+            "description": "Model Architecture information",
+            "format": "pb",
+            "mediatype": "application/x-protobuf",
+            "bytes": 1413777,
+            "delta": {
+                "origin": "local-archive",
+                "format": "tf2;pb;https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/protobuf/saved_model.proto",
+                "local_storage": "installed"
+            }
+        },
+        {
+            "name": "indicies",
+            "path": "variables/variables.index",
+            "title": "Mobilenet V3 Indicies",
+            "format": "bin",
+            "mediatype": "application/octet-stream",
+            "bytes": 153650000,
+            "delta": {
+                "origin": "local-archive",
+                "format": "tf2;index",
+                "local_storage": "installed"
+            }
+        },
+        {
+            "name": "weights",
+            "path": "variables/variables.data-00000-of-00001",
+            "title": "Cifar-10 Test Binary Batch",
+            "description": "First 10'000 data points of CIFAR-10",
+            "format": "bin",
+            "mediatype": "application/octet-stream",
+            "bytes": 16090768,
+            "delta": {
+                "origin": "local-archive",
+                "format": "tf2;weights",
+                "local_storage": "installed"
+            }
+        }
+    ]
+  }

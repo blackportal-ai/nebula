@@ -63,4 +63,4 @@ License is complicated as each image may have a different license.
 
 ## (Pretrained)-Models
 
-TODO
+Just for testing Mobilnetv3 for image classification: protobuf model format from [Kaggle](https://www.kaggle.com/models/google/mobilenet-v3/)
