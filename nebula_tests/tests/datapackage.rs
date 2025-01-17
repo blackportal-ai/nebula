@@ -1,9 +1,12 @@
+//! Integration tests for datapackage parsing and validation
+
 use std::path::Path;
 
 use nebula_common::datapackage::datapackage_meta_from_file_not_validated;
 
 #[test]
-fn test_parse_cifar10() -> Result<(), Box<dyn std::error::Error>> {
+fn test_load_cifar10() -> Result<(), Box<dyn std::error::Error>> {
+    // todo: also test validation
     let filepath = "../nebula_registry/data/cifar10/datapackage.json";
     let dp = datapackage_meta_from_file_not_validated(Path::new(filepath))?;
 
@@ -11,13 +14,14 @@ fn test_parse_cifar10() -> Result<(), Box<dyn std::error::Error>> {
     assert!(dp.delta.is_some());
     let delta = dp.delta.unwrap();
     assert_eq!(delta.category, "classification");
-
     // todo: more tests
+
     Ok(())
 }
 
 #[test]
-fn test_parse_iris() -> Result<(), Box<dyn std::error::Error>> {
+fn test_load_iris() -> Result<(), Box<dyn std::error::Error>> {
+    // todo: also test validation
     let filepath = "../nebula_registry/data/iris/datapackage.json";
     let dp = datapackage_meta_from_file_not_validated(Path::new(filepath))?;
 
@@ -25,5 +29,7 @@ fn test_parse_iris() -> Result<(), Box<dyn std::error::Error>> {
     assert!(dp.delta.is_some());
     let delta = dp.delta.unwrap();
     assert_eq!(delta.classes.unwrap(), 3);
+    // todo: more tests
+
     Ok(())
 }

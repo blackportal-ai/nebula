@@ -5,10 +5,10 @@ edition = "2021"
 authors = ["Tim Janus <tim@janus.rs>"]
 description = "A package manager for machine learning datasets and models."
 license = "BSD-3-Clause"
-repository = "https://github.com/delta-rs/nebula"
+repository = "https://blackportal-ai/delta-rs/nebula"
 readme = "../README.md"
 rust-version = "1.83.0"
-homepage = "https://deltaml.org"
+homepage = "https://blackportal.ai"
 keywords = [
     "machine-learning",
     "ml",

@@ -8,7 +8,7 @@ license = "BSD-3-Clause"
 repository = "https://github.com/blackportal-ai/nebula"
 readme = "../README.md"
 rust-version = "1.83.0"
-homepage = "https://deltaml.org"
+homepage = "https://blackportal.ai"
 keywords = [
     "machine-learning",
     "package-manager",
