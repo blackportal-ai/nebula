@@ -2,7 +2,7 @@
 
 use clap::{Parser, Subcommand};
 use nebula_common::{
-    client::{init_client, list_packages},
+    client::{init_client, list_packages, search_packages},
     configuration::cli::get_configuration,
 };
 
@@ -48,7 +48,7 @@ enum Command {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let config = get_configuration()?;
     let reg_conf = config.remote_registry;
-    let mut client = init_client(reg_conf.port).await?;
+    let mut client = init_client(reg_conf.host, reg_conf.port).await?;
 
     let cli = CmdArgs::parse();
     match cli.cmd {
@@ -57,7 +57,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         //Command::Update => todo!(),
         //Command::Uninstall { all } => todo!(),
         Command::List { cached: _ } => println!("List: {:?}", list_packages(&mut client).await?),
-        //Command::Search { cached } => todo!(),
+        Command::Search { cached: _ } => {
+            println!("Search: {:?}", search_packages(&mut client, "cifar".into()).await?)
+        }
         //Command::Explore {} => todo!(),
         //Command::Sync => todo!(),
         //Command::Registry {} => todo!(),
