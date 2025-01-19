@@ -19,6 +19,3 @@ keywords = [
 
 [dependencies]
 nebula_common = { path = "../nebula_common", version = "0.1" }
-
-serde_json.workspace = true
-serde.workspace = true
