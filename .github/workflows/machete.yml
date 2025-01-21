@@ -13,5 +13,5 @@ env:
 
 jobs:
   cleanup:
-    uses: blackportal-ai/infra/.github/workflows/core.yml@master
+    uses: blackportal-ai/infra/.github/workflows/machete.yml@master
     secrets: inherit

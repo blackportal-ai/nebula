@@ -12,6 +12,6 @@ env:
   TZ: Europe/Stockholm
 
 jobs:
-  build:
-    uses: blackportal-ai/infra/.github/workflows/cargo-update.yml@master
+  update:
+    uses: blackportal-ai/infra/.github/workflows/cargo_update.yml@master
     secrets: inherit

@@ -3,7 +3,7 @@ name: core
 on:
   push:
     branches:
-      - reusable-workflow
+      - master
   pull_request:
     branches:
       - master
@@ -16,18 +16,6 @@ on:
       - "**/.config/**"
 
 jobs:
-  clippy:
+  core:
     uses: blackportal-ai/infra/.github/workflows/core.yml@master
     secrets: inherit
-
-  #build:
-  #  uses: blackportal-ai/infra/.github/workflows/core.yml@master
-  #  secrets: inherit
-
-  #test:
-  #  uses: blackportal-ai/infra/.github/workflows/core.yml@master
-  #  secrets: inherit
-
-  #coverage:
-  #  uses: blackportal-ai/infra/.github/workflows/core.yml@master
-  #  secrets: inherit
