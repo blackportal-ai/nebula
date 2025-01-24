@@ -6,4 +6,5 @@ pub use super::nebula_proto::nebula_package_query_server::NebulaPackageQueryServ
 pub(crate) use super::nebula_proto::*;
 
 pub mod endpoints;
+pub mod metadata_fetchers;
 pub use endpoints::NebulaPackageQueryMockImpl;
