@@ -30,7 +30,7 @@ pub fn datapackage_meta_from_file_not_validated(
 }
 
 /// A mapping for the Data Package json format that is not validated in respect to the schema.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DataPackageNotValidated {
     pub resources: Vec<DataResourceNotValidated>,
 
@@ -41,7 +41,7 @@ pub struct DataPackageNotValidated {
 
     pub id: Option<String>,
 
-    pub licenses: Option<Vec<DataPackageLicense>>,
+    pub licenses: Vec<DataPackageLicense>,
 
     pub title: Option<String>,
 
@@ -65,7 +65,7 @@ pub struct DataPackageNotValidated {
 }
 
 /// A mapping for the Data Resource json format that is not validated in respect to the schema.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DataResourceNotValidated {
     name: String,
 
@@ -95,14 +95,14 @@ pub struct DataResourceNotValidated {
     delta: Option<DeltaDataResourceNotValidated>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum PathSingleOrVec {
     Single(String),
     Vec(Vec<String>),
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DataStringOrObj {
     String(String),
@@ -111,7 +111,7 @@ pub enum DataStringOrObj {
     Object(),
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DataResourcesData {
     Array(Vec<HashMap<String, String>>),
@@ -119,7 +119,7 @@ pub enum DataResourcesData {
     String(String),
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DataPackageContributor {
     pub title: Option<String>,
 
@@ -136,7 +136,7 @@ pub struct DataPackageContributor {
     pub organziation: Option<String>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DataPackageSource {
     pub title: Option<String>,
 
@@ -147,7 +147,7 @@ pub struct DataPackageSource {
     pub version: Option<String>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DataPackageLicense {
     pub name: String,
 

@@ -35,6 +35,7 @@ pub trait ValidateData {
 }
 
 /// A wrapper typ that marks input data as validated
+#[derive(Debug, Clone, PartialEq)]
 pub struct Validated<T: Sized>(T);
 impl<T: Sized> Validated<T> {
     pub fn into_inner(self) -> T {
