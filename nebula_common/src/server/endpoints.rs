@@ -10,7 +10,6 @@ use crate::storage::MetaDataSource;
 use super::nebula_package_query_server::NebulaPackageQuery;
 use super::{ListPackagesRequest, PackageInfo, PackageList, PackageRequest, SearchPackagesRequest};
 
-use tonic::body;
 use tonic::{Request, Response, Status};
 
 #[derive(Debug)]
