@@ -63,7 +63,6 @@ pub struct DataPackageNotValidated {
 
     pub delta: Option<DeltaDataPackageNotValidated>,
 }
-
 /// A mapping for the Data Resource json format that is not validated in respect to the schema.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DataResourceNotValidated {

@@ -2,9 +2,12 @@ use std::{collections::HashMap, path::PathBuf};
 
 use uuid::Uuid;
 
-use crate::datapackage::{DataPackage, datapackage_meta_from_file};
+use crate::{
+    datapackage::{DataPackage, datapackage_meta_from_file},
+    model::{FieldSettings, FilterSettings, PagationSettings, SortSettings},
+};
 
-use super::data_source::{DataSource, PackageId};
+use super::MetaDataSource;
 
 /// Reads datapackage.json files from the filesystem
 pub struct RootFolderSource {
@@ -65,16 +68,38 @@ impl RootFolderSource {
     }
 }
 
-impl DataSource for RootFolderSource {
-    fn list_packages(&self) -> Vec<Uuid> {
-        self.buf.values().map(|(id, _)| *id).collect()
+impl MetaDataSource for RootFolderSource {
+    async fn list_packages(
+        &self,
+        _sort: SortSettings,
+        _filter: FilterSettings,
+        _pagation: PagationSettings,
+        _fields: FieldSettings,
+    ) -> Vec<DataPackage> {
+        self.buf.values().map(|(_, v)| v).cloned().collect()
     }
 
-    fn get_package(&self, id: PackageId) -> Option<crate::datapackage::DataPackage> {
+    async fn get_package(
+        &self,
+        query: &str,
+        _filter: FilterSettings,
+    ) -> Option<crate::datapackage::DataPackage> {
         self.buf
             .values()
-            .filter_map(|(inner_id, v)| if inner_id == &id { Some(v) } else { None })
+            .filter_map(|(_, v)| {
+                if v.name.clone().map_or(false, |el| el.contains(query)) { Some(v) } else { None }
+            })
             .nth(0)
             .cloned()
+    }
+
+    async fn search_package(
+        &self,
+        _search_query: &str,
+        _sort: SortSettings,
+        _filter: FilterSettings,
+        _pagation: PagationSettings,
+    ) -> Vec<DataPackage> {
+        todo!()
     }
 }
