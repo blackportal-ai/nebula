@@ -4,7 +4,7 @@
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DeltaDataPackageNotValidated {
     pub category: String,
     pub classes: Option<u32>,
@@ -15,7 +15,7 @@ pub struct DeltaDataPackageNotValidated {
     pub mirror: Option<String>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DeltaDataResourceNotValidated {
     pub origin: String,
     pub format: Option<String>,

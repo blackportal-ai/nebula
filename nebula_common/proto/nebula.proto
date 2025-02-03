@@ -54,11 +54,13 @@ enum SortOption {
     CREATION_DATE   = 0;    // Sort by creation date
     DOWNLOADS       = 1;    // Sort by download count descending
     NAME            = 2;    // Sort Alphabetical by name
+    AUTHOR          = 3;    // Sort Alphabetical by auhtor
 }
 
 message SortParameter {
     SortOption sort_by = 1;         // Sort option
     optional bool descending = 2;   // Sort direction, default: ascending
+    repeated bytes params = 3;        // interpretation based on SortOption, e.g. DateRange for DOWNLOADs  
 }
 
 message FieldOptions {
@@ -70,7 +72,7 @@ message FieldOptions {
 // message returns complete package info
 message PackageRequest {
     string search_query = 1;                // searches for EXACT package-name
-    PackageType package_type = 2;           // filters by dataset, model or both
+    optional PackageType package_type = 2;  // filters by dataset, model or both
 }
 
 message ListPackagesRequest {

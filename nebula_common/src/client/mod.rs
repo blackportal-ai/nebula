@@ -35,7 +35,7 @@ pub async fn get_package_info(
     name: String,
 ) -> Result<PackageInfo, Box<dyn std::error::Error>> {
     let request =
-        Request::new(PackageRequest { search_query: name, package_type: PackageType::Both as i32 });
+        Request::new(PackageRequest { search_query: name, package_type: None });
     let response = client.get_package_info(request).await?;
 
     Ok(response.into_inner())

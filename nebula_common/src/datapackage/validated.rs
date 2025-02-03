@@ -35,8 +35,9 @@ pub trait ValidateData {
 }
 
 /// A wrapper typ that marks input data as validated
-pub struct Validated<T: Sized>(T);
-impl<T: Sized> Validated<T> {
+#[derive(Debug, Clone, PartialEq)]
+pub struct Validated<T: Sized + Sync + Send>(T);
+impl<T: Sized + Sync + Send> Validated<T> {
     pub fn into_inner(self) -> T {
         self.0
     }
@@ -47,7 +48,7 @@ impl<T: Sized> Validated<T> {
     }
 }
 
-impl<T> Deref for Validated<T> {
+impl<T: Sized + Sync + Send> Deref for Validated<T> {
     type Target = T;
 
     fn deref(&self) -> &T {
