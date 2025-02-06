@@ -16,9 +16,43 @@ keywords = ["machine-learning", "ml", "framework", "cli", "datasets"]
 
 
 [dependencies]
-clap = { version = "4.5", features = ["derive"] }
+clap = { version = "4.5.20", features = [
+    "derive",
+    "cargo",
+    "wrap_help",
+    "unicode",
+    "string",
+    "unstable-styles",
+] }
+config.workspace = true
 
 tokio.workspace = true
-strum_macros.workspace = true
+tokio-util = "0.7.12"
+tonic.workspace = true
+strum.workspace = true
+
+serde.workspace = true
+serde_json.workspace = true
 
 nebula_common = { path = "../nebula_common", version = "0.1" }
+
+# dependenciees from ratatui component sample
+color-eyre = "0.6.3"
+crossterm = { version = "0.28.1", features = ["serde", "event-stream"] }
+ratatui = "0.29.0"
+
+futures = "0.3.31"
+
+tracing = "0.1.40"
+tracing-error = "0.2.0"
+tracing-subscriber = { version = "0.3.18", features = ["env-filter", "serde"] }
+
+derive_deref = "1.1.1"
+directories = "5.0.1"
+lazy_static = "1.5.0"
+json5 = "0.4.1"
+pretty_assertions = "1.4.1"
+
+[build-dependencies]
+anyhow = "1.0.90"
+vergen-gix = { version = "1.0.2", features = ["build", "cargo"] }
