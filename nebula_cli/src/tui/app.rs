@@ -5,14 +5,15 @@ use ratatui::prelude::Rect;
 use serde::{Deserialize, Serialize};
 use tokio::sync::mpsc;
 use tonic::transport::Channel;
-use tracing::{debug, info};
 
 use crate::{
-    action::Action,
     cli::command_interpret,
-    components::{Component, home::Home},
-    config::Config,
-    tui::{Event, Tui},
+    tui::{
+        Event, Tui,
+        action::Action,
+        components::{Component, home::Home},
+        config::Config,
+    },
 };
 
 pub struct App {
@@ -121,7 +122,7 @@ impl App {
         };
         match keymap.get(&vec![key]) {
             Some(action) => {
-                info!("Got action: {action:?}");
+                //info!("Got action: {action:?}");
                 action_tx.send(action.clone())?;
             }
             _ => {
@@ -131,7 +132,7 @@ impl App {
 
                 // Check for multi-key combinations
                 if let Some(action) = keymap.get(&self.last_tick_key_events) {
-                    info!("Got action: {action:?}");
+                    //info!("Got action: {action:?}");
                     action_tx.send(action.clone())?;
                 }
             }
@@ -142,7 +143,7 @@ impl App {
     async fn handle_actions(&mut self, tui: &mut Tui) -> Result<()> {
         while let Ok(action) = self.action_rx.try_recv() {
             if action != Action::Tick && action != Action::Render {
-                debug!("{action:?}");
+                //debug!("{action:?}");
             }
             match action {
                 Action::Tick => {

@@ -11,13 +11,18 @@ use nebula_common::{
     nebula_proto::nebula_package_query_client::NebulaPackageQueryClient,
 };
 
-use crate::config::{get_config_dir, get_data_dir};
+use crate::dirs::{get_config_dir, get_data_dir};
 
 #[derive(Parser, Debug)]
 #[command(author, version = version(), about)]
 pub struct Cli {
+    #[cfg(feature = "tui")]
     #[arg(long, default_value_t = false)]
     pub tui: bool,
+
+    #[cfg(not(feature = "tui"))]
+    #[arg(short, long, default_value_t = false)]
+    pub interactive: bool,
 
     #[command(subcommand)]
     pub cmd: Option<Command>,
@@ -64,7 +69,15 @@ pub struct CmdArgs {
     cmd: Command,
 }
 
-#[derive(Debug, Subcommand, Clone, strum::Display, strum::EnumIter, strum::EnumDiscriminants)]
+#[derive(
+    Debug,
+    Subcommand,
+    Clone,
+    strum::Display,
+    strum::EnumIter,
+    strum::EnumDiscriminants,
+    strum::EnumString
+)]
 #[strum_discriminants(name(CommandVariants))]
 pub enum Command {
     /// init the virtual environment in the given folder

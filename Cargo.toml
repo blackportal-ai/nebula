@@ -4,10 +4,16 @@ resolver = "2"
 
 [workspace.dependencies]
 tokio = { version = "1.43", features = ["rt-multi-thread"] }
+tokio-util = "0.7.12"
+futures = "0.3.31"
 
 tonic = { version = "0.12" }
 prost = { version = "0.13" }
 prost-types = { version = "0.13" }
+
+lazy_static = "1.5"
+derive_deref = "1.1"
+directories = "6.0"
 
 dotenvy = { version = "0.15" }
 

@@ -1,5 +1,12 @@
 #![allow(dead_code)] // Remove this once you start using the code
 
+mod action;
+mod app;
+mod components;
+mod config;
+
+pub use app::App;
+
 use std::{
     io::{Stdout, stdout},
     ops::{Deref, DerefMut},
@@ -24,7 +31,7 @@ use tokio::{
     time::interval,
 };
 use tokio_util::sync::CancellationToken;
-use tracing::error;
+//use tracing::error;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum Event {
@@ -155,7 +162,7 @@ impl Tui {
                 self.task.abort();
             }
             if counter > 100 {
-                error!("Failed to abort task in 100 milliseconds for unknown reason");
+                //error!("Failed to abort task in 100 milliseconds for unknown reason");
                 break;
             }
         }

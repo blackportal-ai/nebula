@@ -14,9 +14,8 @@ use tokio::sync::mpsc::UnboundedSender;
 
 use super::Component;
 use crate::{
-    action::Action,
     cli::{Command, CommandVariants},
-    config::Config,
+    tui::{action::Action, config::Config},
 };
 
 const TODO_HEADER_STYLE: Style = Style::new().fg(SLATE.c100).bg(BLUE.c800);
