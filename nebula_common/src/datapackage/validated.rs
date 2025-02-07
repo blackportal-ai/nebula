@@ -14,7 +14,7 @@ use super::{
 };
 
 #[allow(dead_code)]
-#[derive(Debug, strum_macros::Display)]
+#[derive(Debug, strum::Display)]
 pub enum ValidationError {
     InvalidName,
     InvalidID,

@@ -2,7 +2,7 @@ use std::str::FromStr;
 
 use serde::Deserialize;
 
-#[derive(Debug, Copy, Clone, PartialEq, strum_macros::EnumString, strum_macros::Display)]
+#[derive(Debug, Copy, Clone, PartialEq, strum::EnumString, strum::Display)]
 pub enum Environment {
     #[strum(ascii_case_insensitive)]
     Local,
