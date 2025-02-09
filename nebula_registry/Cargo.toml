@@ -21,7 +21,18 @@ keywords = [
 ]
 
 [dependencies]
+color-eyre.workspace = true
+
+lazy_static.workspace = true
+tracing.workspace = true
+directories.workspace = true
+
+clap.workspace = true
+
 tokio.workspace = true
 tonic.workspace = true
-
 nebula_common = { path = "../nebula_common", version = "0.1" }
+
+[build-dependencies]
+anyhow = "1.0.90"
+vergen-gix = { version = "1.0.2", features = ["build", "cargo"] }

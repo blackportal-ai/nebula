@@ -1,0 +1,38 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/rust
+{
+	"name": "Nebula Dev-Container",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"customizations": {
+		"settings": {
+			"lldb.executable": "/usr/bin/lldb",
+			// VS Code don't watch files under ./target
+			"files.watcherExclude": {
+				"**/target/**": true
+			},
+			"rust-analyzer.checkOnSave.command": "clippy"
+		},
+		"vscode": {
+			"extensions": [
+				"vadimcn.vscode-lldb",
+				"mutantdino.resourcemonitor",
+				"rust-lang.rust-analyzer",
+				"tamasfe.even-better-toml",
+				"fill-labs.dependi",
+				"JScearcy.rust-doc-viewer",
+				"ms-azuretools.vscode-docker",
+				"GitHub.vscode-github-actions",
+				"ms-vscode.vscode-speech",
+				"a5huynh.vscode-ron",
+				"yzhang.markdown-all-in-one",
+				"bpruitt-goddard.mermaid-markdown-syntax-highlighting",
+				"bierner.markdown-mermaid",
+				"dancheg97.grpc-clicker"
+			]
+		}
+	}
+	// without that rust-analyzer crashes
+	//"remoteUser": "root"
+}

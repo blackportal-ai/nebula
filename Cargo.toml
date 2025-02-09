@@ -3,18 +3,41 @@ members = ["nebula_registry", "nebula_cli", "nebula_common", "nebula_tests"]
 resolver = "2"
 
 [workspace.dependencies]
-tokio = { version = "1.43", features = ["rt-multi-thread"] }
+clap = { version = "4.5", features = [
+    "derive",
+    "cargo",
+    "wrap_help",
+    "unicode",
+    "string",
+    "unstable-styles",
+] }
 
+# async dependencies:
+tokio = { version = "1.43", features = ["rt-multi-thread"] }
+tokio-util = "0.7.12"
+futures = "0.3.31"
+
+# gRPC and protobuf dependencies:
 tonic = { version = "0.12" }
 prost = { version = "0.13" }
 prost-types = { version = "0.13" }
 
-dotenvy = { version = "0.15" }
+# tracing and error reporting dependencies
+color-eyre = { version = "0.6.3" }
+#thiserror = { version = "2.0" }
+tracing = { version = "0.1" }
+tracing-error = { version = "0.2" }
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 
+# app initialization dependencies:
+config = "0.15"
+derive_deref = "1.1"
+directories = "6.0"
+dotenvy = { version = "0.15" }
+lazy_static = "1.5"
+
+# serialization / ids and enums
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-strum = "0.26"
-strum_macros = "0.26"
-
+strum = { version = "0.26", features = ["derive"] }
 uuid = { version = "1.12", features = ["v4"] }
-config = "0.15"
