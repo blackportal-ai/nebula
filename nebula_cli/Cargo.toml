@@ -16,7 +16,7 @@ keywords = ["machine-learning", "ml", "framework", "cli", "datasets"]
 
 [features]
 default = []
-tui = ["dep:ratatui", "dep:color-eyre", "dep:crossterm"]
+tui = ["dep:ratatui", "dep:crossterm"]
 
 [dependencies]
 clap = { version = "4.5.20", features = [
@@ -28,6 +28,7 @@ clap = { version = "4.5.20", features = [
     "unstable-styles",
 ] }
 config.workspace = true
+color-eyre.workspace = true
 
 tokio.workspace = true
 tokio-util.workspace = true
@@ -44,7 +45,7 @@ serde_json.workspace = true
 nebula_common = { path = "../nebula_common", version = "0.1" }
 
 # dependenciees for ratatui user interface
-color-eyre = { version = "0.6.3", optional = true }
+
 crossterm = { version = "0.28.1", features = [
     "serde",
     "event-stream",

@@ -7,12 +7,16 @@ use nebula_common::{client::init_client, configuration::cli::get_configuration};
 use nebula_common::nebula_proto::nebula_package_query_client::NebulaPackageQueryClient;
 use tonic::transport::Channel;
 
+use color_eyre::{Section, eyre::Report};
+
 mod cli;
 #[cfg(feature = "tui")]
 pub mod tui;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+async fn main() -> Result<(), Report> {
+    color_eyre::install()?;
+
     // read top-level cli:
     let args = Cli::parse();
 
@@ -44,19 +48,26 @@ async fn run(
 }
 
 #[cfg(not(feature = "tui"))]
-async fn run(
-    mut args: Cli,
-    mut client: NebulaPackageQueryClient<Channel>,
-) -> Result<(), Box<dyn std::error::Error>> {
+async fn run(mut args: Cli, mut client: NebulaPackageQueryClient<Channel>) -> Result<(), Report> {
     use clap::CommandFactory;
+
     use std::io::{self, Write as _};
     println!("{}", cli::version());
 
     if let Some(_initial_cmd) = args.cmd {
         command_interpret(std::env::args_os(), &mut client).await?;
+    } else if !args.interactive {
+        // neither initial cmd nor interactive --> wrong usage
+        Cli::command().print_long_help()?;
+        println!();
+
+        return Err(Report::msg("Invalid command-line usage")
+            .with_suggestion(|| "Either use 'nebula_cli --i' or use a command: 'nebula_cli list'")
+            .with_suggestion(|| "If unsure use 'nebula_cli help'"));
+    } else {
+        println!("Type 'help' or 'help <command-name>' for instructions");
     }
 
-    println!("Type 'help' or 'help <command-name>' for instructions");
     while args.interactive {
         // Prompt user for input
         print!("> ");

@@ -21,7 +21,8 @@ keywords = [
 ]
 
 [dependencies]
+color-eyre.workspace = true
+
 tokio.workspace = true
 tonic.workspace = true
-
 nebula_common = { path = "../nebula_common", version = "0.1" }

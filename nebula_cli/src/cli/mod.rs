@@ -6,6 +6,7 @@ use std::{env, ffi::OsString, path::PathBuf};
 
 use clap::{Parser, Subcommand};
 
+use color_eyre::eyre::Report;
 use nebula_common::{
     client::{list_packages, search_packages},
     nebula_proto::nebula_package_query_client::NebulaPackageQueryClient,
@@ -122,7 +123,7 @@ pub enum Command {
 pub async fn command_interpret<I, T>(
     itr: I,
     client: &mut NebulaPackageQueryClient<tonic::transport::channel::Channel>,
-) -> Result<(), Box<dyn std::error::Error>>
+) -> Result<(), Report>
 where
     I: IntoIterator<Item = T>,
     T: Into<OsString> + Clone,

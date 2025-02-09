@@ -1,5 +1,6 @@
 use std::{path::PathBuf, str::FromStr};
 
+use color_eyre::eyre::Report;
 use tonic::transport::Server;
 
 use nebula_common::{
@@ -9,7 +10,9 @@ use nebula_common::{
 };
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+async fn main() -> Result<(), Report> {
+    color_eyre::install()?;
+
     let config = get_configuration()?;
     let app_conf = config.application;
 
