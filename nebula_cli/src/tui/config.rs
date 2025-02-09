@@ -8,10 +8,8 @@ use derive_deref::{Deref, DerefMut};
 use ratatui::style::{Color, Modifier, Style};
 use serde::{Deserialize, de::Deserializer};
 
-use crate::{
-    dirs::{get_config_dir, get_data_dir},
-    tui::{action::Action, app::Mode},
-};
+use crate::tui::{action::Action, app::Mode};
+use crate::{get_config_dir, get_data_dir};
 
 const CONFIG: &str = include_str!("../../.config/config.json");
 
@@ -39,7 +37,6 @@ pub struct Config {
 
 impl Config {
     pub fn new() -> Result<Self, config::ConfigError> {
-        println!("Config:\n{}", CONFIG);
         let default_config: Config = serde_json::from_str(CONFIG).unwrap();
         let data_dir = get_data_dir();
         let config_dir = get_config_dir();

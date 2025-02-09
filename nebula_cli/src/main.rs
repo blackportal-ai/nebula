@@ -1,13 +1,24 @@
 //! Command line interface to manage local nebula-environments
 
+use std::env;
+use std::path::PathBuf;
+
 use clap::Parser as _;
-use cli::{Cli, command_interpret};
+use cli::Cli;
+use directories::ProjectDirs;
+use nebula_common::configuration::tracing::{AppDefaultValuesFromEnv, initialize_logging};
 use nebula_common::{client::init_client, configuration::cli::get_configuration};
 
-use nebula_common::nebula_proto::nebula_package_query_client::NebulaPackageQueryClient;
-use tonic::transport::Channel;
+use lazy_static::lazy_static;
 
-use color_eyre::{Section, eyre::Report};
+use color_eyre::eyre::Report;
+use tracing::level_filters::LevelFilter;
+
+#[cfg(feature = "tui")]
+use tui::run_tui;
+
+#[cfg(not(feature = "tui"))]
+use cli::run_legacy_cmd;
 
 mod cli;
 #[cfg(feature = "tui")]
@@ -20,94 +31,97 @@ async fn main() -> Result<(), Report> {
     // read top-level cli:
     let args = Cli::parse();
 
+    let env_vars = AppDefaultValuesFromEnv {
+        proj_name: PROJECT_NAME.clone(),
+        data_folder: get_data_dir(),
+        config_folder: get_config_dir(),
+        log_env: LOG_ENV.clone(),
+        log_file: LOG_FILE.clone(),
+        crate_name: env!("CARGO_CRATE_NAME").to_string(),
+    };
+
+    let lvl = if args.verbose { LevelFilter::TRACE } else { LevelFilter::INFO };
+    #[cfg(feature = "tui")]
+    {
+        initialize_logging(if args.tui { None } else { Some(lvl) }, env_vars)?;
+    }
+    #[cfg(not(feature = "tui"))]
+    initialize_logging(Some(lvl), env_vars)?;
+
     // read config:
     let config = get_configuration()?;
     let reg_conf = config.remote_registry;
     let client = init_client(reg_conf.host, reg_conf.port).await?;
 
-    // start as interactive tui if asked by user
-    run(args, client).await
+    #[cfg(feature = "tui")]
+    {
+        run_tui(args, client).await
+    }
+    #[cfg(not(feature = "tui"))]
+    {
+        run_legacy_cmd(args, client).await
+    }
 }
 
-#[cfg(feature = "tui")]
-async fn run(
-    args: Cli,
-    mut client: NebulaPackageQueryClient<Channel>,
-) -> Result<(), Box<dyn std::error::Error>> {
-    use std::io::{self, Write};
-    use tui::App;
-
-    if args.tui {
-        let mut app = App::new(args.tick_rate, args.frame_rate, client)?;
-        app.run().await?;
-    } else {
-        // otherwise process one command
-        command_interpret(std::env::args_os(), &mut client).await?;
-    }
-    Ok(())
+lazy_static! {
+    pub static ref PROJECT_NAME: String = env!("CARGO_CRATE_NAME").to_uppercase().to_string();
+    pub static ref DATA_FOLDER: Option<PathBuf> =
+        env::var(format!("{}_DATA", PROJECT_NAME.clone())).ok().map(PathBuf::from);
+    pub static ref CONFIG_FOLDER: Option<PathBuf> =
+        env::var(format!("{}_CONFIG", PROJECT_NAME.clone())).ok().map(PathBuf::from);
+    pub static ref LOG_ENV: String = format!("{}_LOGLEVEL", PROJECT_NAME.clone());
+    pub static ref LOG_FILE: String = format!("{}.log", env!("CARGO_PKG_NAME"));
 }
 
-#[cfg(not(feature = "tui"))]
-async fn run(mut args: Cli, mut client: NebulaPackageQueryClient<Channel>) -> Result<(), Report> {
-    use clap::CommandFactory;
-
-    use std::io::{self, Write as _};
-    println!("{}", cli::version());
-
-    if let Some(_initial_cmd) = args.cmd {
-        command_interpret(std::env::args_os(), &mut client).await?;
-    } else if !args.interactive {
-        // neither initial cmd nor interactive --> wrong usage
-        Cli::command().print_long_help()?;
-        println!();
-
-        return Err(Report::msg("Invalid command-line usage")
-            .with_suggestion(|| "Either use 'nebula_cli --i' or use a command: 'nebula_cli list'")
-            .with_suggestion(|| "If unsure use 'nebula_cli help'"));
+pub fn get_data_dir() -> PathBuf {
+    let directory = if let Some(s) = DATA_FOLDER.clone() {
+        s
+    } else if let Some(proj_dirs) = project_directory() {
+        proj_dirs.data_local_dir().to_path_buf()
     } else {
-        println!("Type 'help' or 'help <command-name>' for instructions");
-    }
+        PathBuf::from(".").join(".data")
+    };
+    directory
+}
 
-    while args.interactive {
-        // Prompt user for input
-        print!("> ");
-        io::stdout().flush()?;
+pub fn get_config_dir() -> PathBuf {
+    let directory = if let Some(s) = CONFIG_FOLDER.clone() {
+        s
+    } else if let Some(proj_dirs) = project_directory() {
+        proj_dirs.config_local_dir().to_path_buf()
+    } else {
+        PathBuf::from(".").join(".config")
+    };
+    directory
+}
 
-        // Read input from stdin
-        let mut input = String::new();
-        io::stdin().read_line(&mut input)?;
+fn project_directory() -> Option<ProjectDirs> {
+    ProjectDirs::from("com", "blackportal.ai", env!("CARGO_PKG_NAME"))
+}
 
-        input = input.trim().to_lowercase();
-        if input.is_empty() {
-            continue;
-        }
+const VERSION_MESSAGE: &str = concat!(
+    env!("CARGO_PKG_VERSION"),
+    "-",
+    env!("VERGEN_GIT_DESCRIBE"),
+    " (",
+    env!("VERGEN_BUILD_DATE"),
+    ")"
+);
 
-        let mut it = input.split(' ');
-        if let Some(first) = it.next() {
-            if first == "quit" || first == "exit" {
-                args.interactive = false;
-            } else if first == "help" {
-                if let Some(sub_command) = it.next() {
-                    let sub_command = sub_command.trim();
-                    let mut cmd_fac = Cli::command();
-                    let cmd_candidate =
-                        cmd_fac.get_subcommands_mut().find(|cmd| cmd.get_name() == sub_command);
-                    if let Some(cmd) = cmd_candidate {
-                        cmd.print_long_help()?;
-                    } else {
-                        println!("Command '{}' not defined - printing help overview:", sub_command);
-                        Cli::command().print_long_help()?
-                    }
-                } else {
-                    Cli::command().print_long_help()?;
-                }
-            } else {
-                // Convert input to iterator and use in command_interpret
-                input = "nebula_cli ".to_owned() + &input;
-                let args = input.split_whitespace().map(|s| s.to_string()).collect::<Vec<_>>();
-                command_interpret(args.into_iter(), &mut client).await?;
-            }
-        }
-    }
-    Ok(())
+pub fn version() -> String {
+    let author = clap::crate_authors!();
+
+    let current_exe_path = PathBuf::from(clap::crate_name!()).display().to_string();
+    let config_dir_path = get_config_dir().display().to_string();
+    let data_dir_path = get_data_dir().display().to_string();
+
+    format!(
+        "\
+{current_exe_path} - {VERSION_MESSAGE}
+
+Authors: {author}
+
+Config directory: {config_dir_path}
+Data directory: {data_dir_path}"
+    )
 }

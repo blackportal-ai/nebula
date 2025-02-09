@@ -11,6 +11,7 @@ use super::nebula_package_query_server::NebulaPackageQuery;
 use super::{ListPackagesRequest, PackageInfo, PackageList, PackageRequest, SearchPackagesRequest};
 
 use tonic::{Request, Response, Status};
+use tracing::info;
 
 #[derive(Debug)]
 pub struct NebulaPackageQueryMockImpl<T>
@@ -38,18 +39,17 @@ where
         &self,
         request: Request<PackageRequest>,
     ) -> Result<Response<PackageInfo>, Status> {
-        println!("Got a request: {:?}", request);
+        info!("Got a request: {:?}", request);
 
         let mut package = self
             .inner_ds
             .get_package(&request.get_ref().search_query, request.get_ref().as_filter().unwrap())
             .await;
 
-
         let pi: PackageInfo = package.take().unwrap().into();
         Ok(Response::new(pi))
 
-        /* 
+        /*
         match package {
             Some(package) => Ok(Response::new()),
             None => Err(Status::internal("Error handling not implemented")),
@@ -61,7 +61,7 @@ where
         &self,
         request: Request<ListPackagesRequest>,
     ) -> Result<Response<PackageList>, Status> {
-        println!("Got a request: {:?}", request);
+        info!("Got a request: {:?}", request);
 
         let pagation = request.get_ref().as_pagation().unwrap();
         let fields = FieldSettings::default();
@@ -84,7 +84,7 @@ where
         &self,
         request: Request<SearchPackagesRequest>,
     ) -> Result<Response<PackageList>, Status> {
-        println!("Got a request: {:?}", request);
+        info!("Got a request: {:?}", request);
 
         Err(Status::internal("not implemented"))
     }

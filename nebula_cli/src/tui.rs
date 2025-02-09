@@ -4,6 +4,9 @@ mod action;
 mod app;
 mod components;
 mod config;
+mod run;
+
+pub use run::run_tui;
 
 pub use app::App;
 

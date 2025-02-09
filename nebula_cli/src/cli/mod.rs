@@ -2,9 +2,11 @@
 //!
 //!
 
-use std::{env, ffi::OsString, path::PathBuf};
+use std::ffi::OsString;
 
 use clap::{Parser, Subcommand};
+
+use tracing::{info, warn};
 
 use color_eyre::eyre::Report;
 use nebula_common::{
@@ -12,20 +14,29 @@ use nebula_common::{
     nebula_proto::nebula_package_query_client::NebulaPackageQueryClient,
 };
 
-use nebula_common::configuration::dirs::{get_config_dir, get_data_dir};
+use crate::version;
+
+mod run;
+pub use run::run_legacy_cmd;
 
 #[derive(Parser, Debug)]
 #[command(author, version = version(), about)]
 pub struct Cli {
     #[cfg(feature = "tui")]
     #[arg(long, default_value_t = false)]
+    /// use a [ratatui] based terminal user interface instead of a simple cmd-tool
     pub tui: bool,
 
-    #[cfg(not(feature = "tui"))]
     #[arg(short, long, default_value_t = false)]
+    /// start the cmd-tool in interactive mode, that allows typing multiple commands
     pub interactive: bool,
 
+    /// use verbose output, only in non TUI mode.
+    #[arg(short, long, default_value_t = false)]
+    pub verbose: bool,
+
     #[command(subcommand)]
+    /// command that is executed
     pub cmd: Option<Command>,
 
     /// Tick rate, i.e. number of ticks per second
@@ -35,33 +46,6 @@ pub struct Cli {
     /// Frame rate, i.e. number of frames per second
     #[arg(short, long, value_name = "FLOAT", default_value_t = 60.0)]
     pub frame_rate: f64,
-}
-
-const VERSION_MESSAGE: &str = concat!(
-    env!("CARGO_PKG_VERSION"),
-    "-",
-    env!("VERGEN_GIT_DESCRIBE"),
-    " (",
-    env!("VERGEN_BUILD_DATE"),
-    ")"
-);
-
-pub fn version() -> String {
-    let author = clap::crate_authors!();
-
-    let current_exe_path = PathBuf::from(clap::crate_name!()).display().to_string();
-    let config_dir_path = get_config_dir().display().to_string();
-    let data_dir_path = get_data_dir().display().to_string();
-
-    format!(
-        "\
-{current_exe_path} - {VERSION_MESSAGE}
-
-Authors: {author}
-
-Config directory: {config_dir_path}
-Data directory: {data_dir_path}"
-    )
 }
 
 #[derive(Debug, Parser)]
@@ -135,15 +119,15 @@ where
         //Command::Install => todo!(),
         //Command::Update => todo!(),
         //Command::Uninstall { all } => todo!(),
-        Command::List { cached: _ } => println!("List: {:?}", list_packages(client).await?),
+        Command::List { cached: _ } => info!("List: {:?}", list_packages(client).await?),
         Command::Search { cached: _ } => {
-            println!("Search: {:?}", search_packages(client, "cifar".into()).await?)
+            info!("Search: {:?}", search_packages(client, "cifar".into()).await?)
         }
         //Command::Explore {} => todo!(),
         //Command::Sync => todo!(),
         //Command::Registry {} => todo!(),
         _ => {
-            println!("Command '{}' not yet implemented", cli.cmd)
+            warn!("Command '{}' not yet implemented", cli.cmd)
         }
     }
 
