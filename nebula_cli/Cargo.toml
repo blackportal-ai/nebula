@@ -34,8 +34,6 @@ tokio-util.workspace = true
 futures.workspace = true
 
 derive_deref.workspace = true
-directories.workspace = true
-lazy_static.workspace = true
 
 tonic.workspace = true
 strum.workspace = true

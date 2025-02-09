@@ -8,7 +8,6 @@ use nebula_common::nebula_proto::nebula_package_query_client::NebulaPackageQuery
 use tonic::transport::Channel;
 
 mod cli;
-mod dirs;
 #[cfg(feature = "tui")]
 pub mod tui;
 
@@ -49,15 +48,15 @@ async fn run(
     mut args: Cli,
     mut client: NebulaPackageQueryClient<Channel>,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    use std::io::{self, Write as _};
-
     use clap::CommandFactory;
+    use std::io::{self, Write as _};
+    println!("{}", cli::version());
 
     if let Some(_initial_cmd) = args.cmd {
         command_interpret(std::env::args_os(), &mut client).await?;
     }
 
-    println!("{}\nType 'help' or 'help <command-name>' for instructions", cli::version());
+    println!("Type 'help' or 'help <command-name>' for instructions");
     while args.interactive {
         // Prompt user for input
         print!("> ");
