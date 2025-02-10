@@ -30,8 +30,6 @@ tokio-util.workspace = true
 futures.workspace = true
 
 tracing.workspace = true
-tracing-error.workspace = true
-tracing-subscriber.workspace = true
 
 derive_deref.workspace = true
 
