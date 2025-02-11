@@ -1,6 +1,6 @@
 //! Contains the model internally used by nebula
-//! 
-//! 
+//!
+//!
 
 pub mod pb_mapper;
 
@@ -12,10 +12,8 @@ pub enum MetaDataField {
     PreviewImages,
 
     DataPackage,
-
     // todo more?
 }
-
 
 /// Settings to select additional (heavy) fields
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -38,16 +36,8 @@ impl Default for PagationSettings {
 }
 
 /// multi level sort settinggs, not implemented
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct SortSettings {
-
-}
-
-impl Default for SortSettings {
-    fn default() -> Self {
-        Self {  }
-    }
-}
+#[derive(Debug, Default, Clone, PartialEq, Eq)]
+pub struct SortSettings {}
 
 /// Filter Settings, not implemnted
 #[derive(Debug, Clone, PartialEq, Eq)]

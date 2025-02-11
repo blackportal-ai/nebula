@@ -22,8 +22,12 @@ pub trait SortMapper {
 impl PagationMapper for super::super::server::ListPackagesRequest {
     fn as_pagation(&self) -> Result<PagationSettings, Box<dyn std::error::Error>> {
         let mut reval = PagationSettings::default();
-        if let Some(limit) = self.limit {reval.limit = limit as u32;}
-        if let Some(offset) = self.offset {reval.offset = offset as u32;}
+        if let Some(limit) = self.limit {
+            reval.limit = limit as u32;
+        }
+        if let Some(offset) = self.offset {
+            reval.offset = offset as u32;
+        }
         Ok(reval)
     }
 }
@@ -31,8 +35,12 @@ impl PagationMapper for super::super::server::ListPackagesRequest {
 impl PagationMapper for super::super::server::SearchPackagesRequest {
     fn as_pagation(&self) -> Result<PagationSettings, Box<dyn std::error::Error>> {
         let mut reval = PagationSettings::default();
-        if let Some(limit) = self.limit {reval.limit = limit as u32;}
-        if let Some(offset) = self.offset {reval.offset = offset as u32;}
+        if let Some(limit) = self.limit {
+            reval.limit = limit as u32;
+        }
+        if let Some(offset) = self.offset {
+            reval.offset = offset as u32;
+        }
         Ok(reval)
     }
 }
@@ -40,7 +48,9 @@ impl PagationMapper for super::super::server::SearchPackagesRequest {
 impl FilterMapper for super::super::server::PackageRequest {
     fn as_filter(&self) -> Result<FilterSettings, Box<dyn std::error::Error>> {
         let mut reval = FilterSettings::default();
-        if let Some(pt) = self.package_type {reval.package_type = PackageType::try_from(pt).unwrap();}
+        if let Some(pt) = self.package_type {
+            reval.package_type = PackageType::try_from(pt).unwrap();
+        }
         Ok(reval)
     }
 
@@ -53,11 +63,10 @@ impl FilterMapper for super::super::server::SearchPackagesRequest {
     fn as_filter(&self) -> Result<FilterSettings, Box<dyn std::error::Error>> {
         Ok(FilterSettings::default())
     }
-    
+
     fn into_filter(self) -> Result<FilterSettings, Box<dyn std::error::Error>> {
         Ok(FilterSettings::default())
     }
-    
 }
 
 impl SortMapper for super::super::server::SearchPackagesRequest {
@@ -66,9 +75,9 @@ impl SortMapper for super::super::server::SearchPackagesRequest {
     }
 }
 
-impl Into<PackageInfo> for DataPackage {
-    fn into(self) -> PackageInfo {
-        let mut inner = self.into_inner();
+impl From<DataPackage> for PackageInfo {
+    fn from(val: DataPackage) -> PackageInfo {
+        let mut inner = val.into_inner();
         PackageInfo {
             name: match inner.name.take() {
                 Some(v) => v,
