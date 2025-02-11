@@ -10,7 +10,7 @@ use tracing::{info, level_filters::LevelFilter};
 use nebula_common::{
     configuration::{
         registry::get_configuration,
-        tracing::{AppDefaultValuesFromEnv, initialize_logging},
+        tracing::{AppDefaultValuesFromEnv, initialize_logging, tracing_span_for_request},
     },
     server::{NebulaPackageQueryMockImpl, NebulaPackageQueryServer},
     storage::root_folder::RootFolderSource,
@@ -42,7 +42,11 @@ async fn main() -> Result<(), Report> {
 
     info!("{}", version());
     info!("Nebula Registry v0.1.0 - running on: '{}'", addr);
-    Server::builder().add_service(NebulaPackageQueryServer::new(registry)).serve(addr).await?;
+    Server::builder()
+        .trace_fn(tracing_span_for_request)
+        .add_service(NebulaPackageQueryServer::new(registry))
+        .serve(addr)
+        .await?;
 
     Ok(())
 }

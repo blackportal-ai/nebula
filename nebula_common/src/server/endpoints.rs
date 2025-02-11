@@ -11,7 +11,7 @@ use super::nebula_package_query_server::NebulaPackageQuery;
 use super::{ListPackagesRequest, PackageInfo, PackageList, PackageRequest, SearchPackagesRequest};
 
 use tonic::{Request, Response, Status};
-use tracing::info;
+use tracing::instrument;
 
 #[derive(Debug)]
 pub struct NebulaPackageQueryMockImpl<T>
@@ -35,12 +35,11 @@ impl<T> NebulaPackageQuery for NebulaPackageQueryMockImpl<T>
 where
     T: MetaDataSource + Send + Sync + 'static,
 {
+    #[instrument(name = "Get Package Info", skip(self))]
     async fn get_package_info(
         &self,
         request: Request<PackageRequest>,
     ) -> Result<Response<PackageInfo>, Status> {
-        info!("Got a request: {:?}", request);
-
         let mut package = self
             .inner_ds
             .get_package(&request.get_ref().search_query, request.get_ref().as_filter().unwrap())
@@ -57,12 +56,11 @@ where
         */
     }
 
+    #[instrument(name = "List Packages", skip(self))]
     async fn list_packages(
         &self,
         request: Request<ListPackagesRequest>,
     ) -> Result<Response<PackageList>, Status> {
-        info!("Got a request: {:?}", request);
-
         let pagation = request.get_ref().as_pagation().unwrap();
         let fields = FieldSettings::default();
         let filter = FilterSettings::default();
@@ -80,12 +78,11 @@ where
         Ok(Response::new(body))
     }
 
+    #[instrument(name = "Search Packages", skip(self))]
     async fn search_packages(
         &self,
-        request: Request<SearchPackagesRequest>,
+        _request: Request<SearchPackagesRequest>,
     ) -> Result<Response<PackageList>, Status> {
-        info!("Got a request: {:?}", request);
-
         Err(Status::internal("not implemented"))
     }
 }

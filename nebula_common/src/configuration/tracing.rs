@@ -3,9 +3,11 @@
 use std::{io, path::PathBuf};
 
 use color_eyre::eyre::Report;
-use tracing::level_filters::LevelFilter;
+use http::Request;
+use tracing::{Level, Span, level_filters::LevelFilter};
 use tracing_error::ErrorLayer;
 use tracing_subscriber::{Layer as _, layer::SubscriberExt as _, util::SubscriberInitExt as _};
+use uuid::Uuid;
 
 pub struct AppDefaultValuesFromEnv {
     pub proj_name: String,
@@ -61,4 +63,17 @@ pub fn initialize_logging(
         tracing_subscriber::registry().with(file_subscriber).with(ErrorLayer::default()).init();
     }
     Ok(())
+}
+
+pub fn tracing_span_for_request(request: &Request<()>) -> Span {
+    let tracing_span = tracing::span!(
+        Level::INFO,
+        "received request",
+        req_id = Uuid::new_v4().to_string(),
+        method = request.method().to_string(),
+        uri = request.uri().to_string(),
+        error = tracing::field::Empty,
+        error_chain = tracing::field::Empty,
+    );
+    tracing_span
 }
