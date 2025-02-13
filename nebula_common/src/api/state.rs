@@ -5,7 +5,7 @@ use color_eyre::eyre::{Report, eyre};
 use crate::{
     client::init_client,
     configuration::cli::{self, get_configuration},
-    server::nebula_package_query_client::NebulaPackageQueryClient,
+    registry::nebula_package_query_client::NebulaPackageQueryClient,
 };
 
 /// The state of nebula api (client side)

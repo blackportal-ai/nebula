@@ -12,7 +12,7 @@ use nebula_common::{
         registry::get_configuration,
         tracing::{AppDefaultValuesFromEnv, initialize_logging, tracing_span_for_request},
     },
-    server::{NebulaPackageQueryMockImpl, NebulaPackageQueryServer},
+    registry::{NebulaPackageQueryMockImpl, NebulaPackageQueryServer},
     storage::root_folder::RootFolderSource,
 };
 

@@ -1,6 +1,6 @@
 //! Contains functionality to map protobuf related types to nebulas internal model
 
-use crate::{datapackage::DataPackage, server::PackageInfo};
+use crate::{datapackage::DataPackage, registry::PackageInfo};
 
 use super::{FilterSettings, PackageType, PagationSettings, SortSettings};
 
@@ -19,7 +19,7 @@ pub trait SortMapper {
     fn as_sort(&self) -> Result<SortSettings, Box<dyn std::error::Error>>;
 }
 
-impl PagationMapper for super::super::server::ListPackagesRequest {
+impl PagationMapper for super::super::registry::ListPackagesRequest {
     fn as_pagation(&self) -> Result<PagationSettings, Box<dyn std::error::Error>> {
         let mut reval = PagationSettings::default();
         if let Some(limit) = self.limit {
@@ -32,7 +32,7 @@ impl PagationMapper for super::super::server::ListPackagesRequest {
     }
 }
 
-impl PagationMapper for super::super::server::SearchPackagesRequest {
+impl PagationMapper for super::super::registry::SearchPackagesRequest {
     fn as_pagation(&self) -> Result<PagationSettings, Box<dyn std::error::Error>> {
         let mut reval = PagationSettings::default();
         if let Some(limit) = self.limit {
@@ -45,7 +45,7 @@ impl PagationMapper for super::super::server::SearchPackagesRequest {
     }
 }
 
-impl FilterMapper for super::super::server::PackageRequest {
+impl FilterMapper for super::super::registry::PackageRequest {
     fn as_filter(&self) -> Result<FilterSettings, Box<dyn std::error::Error>> {
         let mut reval = FilterSettings::default();
         if let Some(pt) = self.package_type {
@@ -59,7 +59,7 @@ impl FilterMapper for super::super::server::PackageRequest {
     }
 }
 
-impl FilterMapper for super::super::server::SearchPackagesRequest {
+impl FilterMapper for super::super::registry::SearchPackagesRequest {
     fn as_filter(&self) -> Result<FilterSettings, Box<dyn std::error::Error>> {
         Ok(FilterSettings::default())
     }
@@ -69,7 +69,7 @@ impl FilterMapper for super::super::server::SearchPackagesRequest {
     }
 }
 
-impl SortMapper for super::super::server::SearchPackagesRequest {
+impl SortMapper for super::super::registry::SearchPackagesRequest {
     fn as_sort(&self) -> Result<SortSettings, Box<dyn std::error::Error>> {
         Ok(SortSettings::default())
     }

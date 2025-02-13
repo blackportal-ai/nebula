@@ -4,7 +4,7 @@
 
 pub mod pb_mapper;
 
-pub type PackageType = super::server::PackageType;
+pub type PackageType = super::registry::PackageType;
 
 /// Optional MetaData Fields
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -47,6 +47,6 @@ pub struct FilterSettings {
 
 impl Default for FilterSettings {
     fn default() -> Self {
-        Self { package_type: crate::server::PackageType::Both }
+        Self { package_type: crate::registry::PackageType::Both }
     }
 }

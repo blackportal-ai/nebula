@@ -1,6 +1,6 @@
 use color_eyre::eyre::{Report, eyre};
 
-use crate::{NebulaCliState, client::list_packages, server::PackageInfo};
+use crate::{NebulaCliState, client::list_packages, registry::PackageInfo};
 
 use super::Site;
 

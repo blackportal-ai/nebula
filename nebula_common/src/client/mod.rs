@@ -4,7 +4,7 @@ use color_eyre::eyre::Report;
 use tonic::Request;
 use tonic::transport::Channel;
 
-use crate::server::{ListPackagesRequest, PackageType};
+use crate::registry::{ListPackagesRequest, PackageType};
 
 use super::nebula_proto::nebula_package_query_client::NebulaPackageQueryClient;
 use super::nebula_proto::{PackageInfo, PackageList, PackageRequest, SearchPackagesRequest};

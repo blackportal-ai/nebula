@@ -2,7 +2,7 @@ use super::Site;
 
 use color_eyre::eyre::{Report, eyre};
 
-use crate::{NebulaCliState, client::search_packages, server::PackageInfo};
+use crate::{NebulaCliState, client::search_packages, registry::PackageInfo};
 
 pub struct SearchArgs {
     pub query: String,

@@ -5,7 +5,7 @@ pub mod client;
 pub mod configuration;
 pub mod datapackage;
 pub mod model;
-pub mod server;
+pub mod registry;
 pub mod storage;
 
 pub mod nebula_proto {
