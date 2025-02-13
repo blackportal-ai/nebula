@@ -15,7 +15,7 @@ homepage = "https://blackportal.ai"
 keywords = ["machine-learning", "ml", "framework", "cli", "datasets"]
 
 [features]
-default = ["tui"]
+default = []
 tui = ["dep:ratatui", "dep:crossterm", "dep:signal-hook"]
 
 [dependencies]

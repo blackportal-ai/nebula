@@ -89,7 +89,7 @@ impl From<DataPackage> for PackageInfo {
             },
             description: match inner.description.take() {
                 Some(v) => v,
-                None => "No Information".to_string(),
+                None => "No Description".to_string(),
             },
             license: {
                 let mut reval = String::new();

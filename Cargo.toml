@@ -40,4 +40,5 @@ lazy_static = "1.5"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 strum = { version = "0.26", features = ["derive"] }
+num_enum = { version = "0.7" }
 uuid = { version = "1.12", features = ["v4"] }

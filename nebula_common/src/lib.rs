@@ -1,5 +1,6 @@
 //! Nebula common library crate with functionality for both registry and cli
 
+pub mod api;
 pub mod client;
 pub mod configuration;
 pub mod datapackage;
@@ -14,3 +15,5 @@ pub mod nebula_proto {
 pub mod nebula_proto_fallback {
     // include older version here
 }
+
+pub use api::state::NebulaState as NebulaCliState;

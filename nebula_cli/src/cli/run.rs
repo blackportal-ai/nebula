@@ -1,14 +1,12 @@
 //! runner for a legecy command line
 
+use crate::cli::LegacyPostCommandHandler;
+
 use super::{Cli, command_interpret};
 use color_eyre::eyre::Report;
-use nebula_common::nebula_proto::nebula_package_query_client::NebulaPackageQueryClient;
-use tonic::transport::Channel;
+use nebula_common::NebulaCliState;
 
-pub async fn run_legacy_cmd(
-    mut args: Cli,
-    mut client: NebulaPackageQueryClient<Channel>,
-) -> Result<(), Report> {
+pub async fn run_legacy_cmd(mut args: Cli, mut state: NebulaCliState) -> Result<(), Report> {
     use clap::CommandFactory;
     use color_eyre::Section as _;
     use tracing::info;
@@ -16,8 +14,10 @@ pub async fn run_legacy_cmd(
     use std::io::{self, Write as _};
     info!("{}", super::version());
 
+    let mut post_command_handler = LegacyPostCommandHandler {};
+
     if let Some(_initial_cmd) = args.cmd {
-        command_interpret(std::env::args_os(), &mut client).await?;
+        command_interpret(std::env::args_os(), &mut state, &mut post_command_handler).await?;
     } else if !args.interactive {
         // neither initial cmd nor interactive --> wrong usage
         Cli::command().print_long_help()?;
@@ -66,7 +66,7 @@ pub async fn run_legacy_cmd(
                 // Convert input to iterator and use in command_interpret
                 input = "nebula_cli ".to_owned() + &input;
                 let args = input.split_whitespace().map(|s| s.to_string()).collect::<Vec<_>>();
-                command_interpret(args.into_iter(), &mut client).await?;
+                command_interpret(args.into_iter(), &mut state, &mut post_command_handler).await?;
             }
         }
     }

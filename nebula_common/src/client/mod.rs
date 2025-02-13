@@ -10,7 +10,7 @@ use super::nebula_proto::nebula_package_query_client::NebulaPackageQueryClient;
 use super::nebula_proto::{PackageInfo, PackageList, PackageRequest, SearchPackagesRequest};
 
 pub async fn init_client(
-    host: String,
+    host: &str,
     port: u16,
 ) -> Result<NebulaPackageQueryClient<Channel>, Report> {
     let client = NebulaPackageQueryClient::connect(format!("http://{}:{}", host, port)).await?;

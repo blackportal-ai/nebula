@@ -1,13 +1,12 @@
 use color_eyre::{Result, eyre};
 use crossterm::event::KeyEvent;
-use nebula_common::nebula_proto::nebula_package_query_client::NebulaPackageQueryClient;
+use nebula_common::NebulaCliState;
 use ratatui::prelude::Rect;
 use serde::{Deserialize, Serialize};
 use tokio::sync::mpsc;
-use tonic::transport::Channel;
 
 use crate::{
-    cli::command_interpret,
+    cli::{PostCommandHandler, command_interpret},
     tui::{
         Event, Tui,
         action::Action,
@@ -27,7 +26,8 @@ pub struct App {
     last_tick_key_events: Vec<KeyEvent>,
     action_tx: mpsc::UnboundedSender<Action>,
     action_rx: mpsc::UnboundedReceiver<Action>,
-    client: NebulaPackageQueryClient<Channel>,
+    state: NebulaCliState,
+    post_command_handler: RatatuiPostCommandHandler,
 }
 
 #[derive(Default, Debug, Copy, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -36,12 +36,11 @@ pub enum Mode {
     Home,
 }
 
+pub struct RatatuiPostCommandHandler {}
+impl PostCommandHandler for RatatuiPostCommandHandler {}
+
 impl App {
-    pub fn new(
-        tick_rate: f64,
-        frame_rate: f64,
-        client: NebulaPackageQueryClient<Channel>,
-    ) -> Result<Self> {
+    pub fn new(tick_rate: f64, frame_rate: f64, state: NebulaCliState) -> Result<Self> {
         let (action_tx, action_rx) = mpsc::unbounded_channel();
         Ok(Self {
             tick_rate,
@@ -54,7 +53,8 @@ impl App {
             last_tick_key_events: Vec::new(),
             action_tx,
             action_rx,
-            client,
+            state,
+            post_command_handler: RatatuiPostCommandHandler {},
         })
     }
 
@@ -158,7 +158,8 @@ impl App {
 
                 Action::Command(ref cmd) => command_interpret(
                     ["nebula_cli".to_string(), cmd.to_lowercase()].into_iter(),
-                    &mut self.client,
+                    &mut self.state,
+                    &mut self.post_command_handler,
                 )
                 .await
                 .map_err(|_e| eyre::Report::msg("todo"))?,
