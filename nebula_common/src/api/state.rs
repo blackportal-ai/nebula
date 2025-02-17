@@ -6,10 +6,11 @@ use crate::{
     client::init_client,
     configuration::cli::{self, get_configuration},
     registry::nebula_package_query_client::NebulaPackageQueryClient,
+    storage::{MetaDataSource, root_folder::RootFolderSource},
 };
 
 /// The state of nebula api (client side)
-#[derive(Debug, Clone, Default)]
+#[derive(Debug)]
 pub struct NebulaState {
     virt_env_path: Option<PathBuf>,
 
@@ -22,6 +23,8 @@ pub struct NebulaState {
     query_client: Option<NebulaPackageQueryClient<tonic::transport::channel::Channel>>,
 
     cli_api_settings: Option<cli::Settings>,
+
+    data_source: Option<Box<dyn MetaDataSource>>,
 }
 
 impl NebulaState {
@@ -35,6 +38,7 @@ impl NebulaState {
             virt_env_path: None,
             cli_api_settings: None,
             query_client: None,
+            data_source: None,
         }
     }
 
@@ -51,6 +55,17 @@ impl NebulaState {
         } else {
             Err(eyre!("Cannot init client: Configuration not loaded"))
         }
+    }
+
+    pub fn init_data_source(&mut self) {
+        if self.data_source.is_none() {
+            self.data_source =
+                Some(Box::new(RootFolderSource::new_from_folder(self.registry_path.clone())))
+        }
+    }
+
+    pub fn data_source(&self) -> Option<&dyn MetaDataSource> {
+        self.data_source.as_deref()
     }
 
     pub fn data(&self) -> &PathBuf {

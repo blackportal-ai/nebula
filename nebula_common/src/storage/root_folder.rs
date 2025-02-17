@@ -1,5 +1,6 @@
-use std::{collections::HashMap, path::PathBuf};
+use std::{collections::HashMap, fs::create_dir_all, ops::Deref, path::PathBuf};
 
+use color_eyre::eyre::Report;
 use uuid::Uuid;
 
 use crate::{
@@ -7,9 +8,12 @@ use crate::{
     model::{FieldSettings, FilterSettings, PagationSettings, SortSettings},
 };
 
+use async_trait::async_trait;
+
 use super::MetaDataSource;
 
 /// Reads datapackage.json files from the filesystem
+#[derive(Debug)]
 pub struct RootFolderSource {
     path: PathBuf,
 
@@ -68,6 +72,7 @@ impl RootFolderSource {
     }
 }
 
+#[async_trait]
 impl MetaDataSource for RootFolderSource {
     async fn list_packages(
         &self,
@@ -79,11 +84,7 @@ impl MetaDataSource for RootFolderSource {
         self.buf.values().map(|(_, v)| v).cloned().collect()
     }
 
-    async fn get_package(
-        &self,
-        query: &str,
-        _filter: FilterSettings,
-    ) -> Option<crate::datapackage::DataPackage> {
+    async fn get_package(&self, query: &str, _filter: FilterSettings) -> Option<DataPackage> {
         self.buf
             .values()
             .filter_map(|(_, v)| {
@@ -101,5 +102,59 @@ impl MetaDataSource for RootFolderSource {
         _pagation: PagationSettings,
     ) -> Vec<DataPackage> {
         todo!()
+    }
+
+    async fn put_package_metadata(&mut self, package: &DataPackage) -> Result<(), Report> {
+        // todo: error if version or name not given
+
+        // ensure folder is there
+        let folder =
+            self.path.join(package.name.as_ref().unwrap()).join(package.version.as_ref().unwrap());
+        create_dir_all(folder.clone()).unwrap();
+        let json = serde_json::ser::to_string_pretty(package.deref()).unwrap();
+        let dp_path = folder.join("datapackage.json");
+        std::fs::write(dp_path, json).unwrap();
+
+        Ok(())
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use std::str::FromStr;
+
+    use super::*;
+    use crate::datapackage::{DataPackageNotValidated, DataResourceNotValidated, ValidateData};
+
+    #[tokio::test]
+    #[should_panic]
+    pub async fn test_put_missing_version() {
+        let mut rf = RootFolderSource::new_from_folder(PathBuf::from_str("tmp").unwrap());
+        let res = DataResourceNotValidated { name: "iris.csv".into(), ..Default::default() };
+        let package = DataPackageNotValidated {
+            resources: vec![res],
+            name: Some("iris".into()),
+            ..Default::default()
+        };
+
+        let dp = package.validate().unwrap();
+        rf.put_package_metadata(&dp).await.expect("version is missing, so should panic");
+    }
+
+    #[tokio::test]
+    pub async fn test_put_valid() {
+        let mut rf = RootFolderSource::new_from_folder(PathBuf::from_str("tmp").unwrap());
+        let res = DataResourceNotValidated { name: "iris.csv".into(), ..Default::default() };
+        let package = DataPackageNotValidated {
+            resources: vec![res],
+            name: Some("iris".into()),
+            version: Some("0.1.0".into()),
+            ..Default::default()
+        };
+
+        let dp = package.validate().unwrap();
+        rf.put_package_metadata(&dp).await.unwrap();
+
+        assert!(std::fs::exists(PathBuf::from_str("./tmp/datapackage.json").unwrap()).is_ok())
     }
 }

@@ -23,7 +23,7 @@ pub use validated::DataPackage;
 pub use validated::DataResource;
 pub use validated::DeltaDataPackage;
 pub use validated::DeltaDataResource;
-use validated::ValidateData;
+pub use validated::ValidateData;
 
 /// Reads a json file that contains the datapackage descriptor as json and checks it validity
 ///

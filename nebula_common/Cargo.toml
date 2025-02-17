@@ -19,6 +19,7 @@ keywords = [
 
 [dependencies]
 
+tokio.workspace = true
 tonic.workspace = true
 prost.workspace = true
 
@@ -36,6 +37,8 @@ tracing-error.workspace = true
 tracing-subscriber.workspace = true
 color-eyre.workspace = true
 http = "1.2"
+
+async-trait = "0.1"
 
 [build-dependencies]
 tonic-build = "0.12.3"
