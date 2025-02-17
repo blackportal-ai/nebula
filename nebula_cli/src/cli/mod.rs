@@ -162,20 +162,28 @@ impl LegacyPostCommandHandler {
 
 impl PostCommandHandler for LegacyPostCommandHandler {
     fn on_search_packages(&self, packages: Vec<PackageInfo>) {
-        for (i, pi) in packages.iter().enumerate() {
-            if i > 1 {
-                println!();
+        if packages.is_empty() {
+            println!("No package found.");
+        } else {
+            for (i, pi) in packages.iter().enumerate() {
+                if i > 1 {
+                    println!();
+                }
+                self.print_package_info(pi);
             }
-            self.print_package_info(pi);
         }
     }
 
     fn on_list(&self, packages: Vec<PackageInfo>) {
-        for (i, pi) in packages.iter().enumerate() {
-            if i > 1 {
-                println!();
+        if packages.is_empty() {
+            println!("No packages found.");
+        } else {
+            for (i, pi) in packages.iter().enumerate() {
+                if i > 1 {
+                    println!();
+                }
+                self.print_package_info(pi);
             }
-            self.print_package_info(pi);
         }
     }
 
