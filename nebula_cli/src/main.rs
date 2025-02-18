@@ -50,6 +50,7 @@ async fn main() -> Result<(), Report> {
 
     let mut state = NebulaCliState::new(get_data_dir(), get_config_dir());
     state.init_config()?;
+    state.init_data_source();
     state.init_client().await?;
 
     #[cfg(feature = "tui")]

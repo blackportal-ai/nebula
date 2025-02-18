@@ -37,3 +37,7 @@ pub use list::list_package;
 use num_enum::TryFromPrimitive;
 pub use search::SearchArgs;
 pub use search::search_package;
+
+pub use sync::SyncArgs;
+pub use sync::SyncRe;
+pub use sync::sync_packages;

@@ -1,0 +1,52 @@
+use color_eyre::eyre::{self, Report};
+use tracing::info;
+
+use crate::{
+    NebulaCliState,
+    client::list_packages,
+    datapackage::{DataPackage, DataPackageNotValidated, ValidateData},
+    registry::PackageInfo,
+    storage::MetaDataSource,
+};
+
+pub struct SyncRe {}
+
+pub struct SyncArgs {
+    // todo: use timestamp datatype
+    pub last_sync: Option<f32>,
+}
+
+fn tmp() -> String {
+    include_str!("../../../nebula_registry/data/cifar10/datapackage.json").into()
+}
+
+fn from_json(pi: &PackageInfo) -> Result<DataPackage, Report> {
+    let data_package: DataPackageNotValidated = serde_json::from_str(pi.datapackage_json())?;
+    //let data_package: DataPackageNotValidated = serde_json::from_str(tmp().as_str())?;
+
+    data_package.validate().map_err(|e| eyre::Report::msg(e.to_string()))
+}
+
+pub async fn sync_packages(_args: SyncArgs, state: &mut NebulaCliState) -> Result<SyncRe, Report> {
+    // todo: use timestamp and server side decisions instead of complete list
+    let package_list = list_packages(state.client().unwrap()).await?;
+    for pi in package_list.packages {
+        // get datapackage json from package info:
+        match from_json(&pi) {
+            Ok(dp) => {
+                if let Err(err) = state.put_package_metadata(&dp).await {
+                    println!("{:?}", err);
+                    continue;
+                } else {
+                    info!("Installed: {}", dp.name.clone().unwrap_or("nameless".into()));
+                }
+            }
+            Err(err) => {
+                println!("{:?}", err);
+                continue;
+            }
+        }
+    }
+
+    Ok(SyncRe {})
+}

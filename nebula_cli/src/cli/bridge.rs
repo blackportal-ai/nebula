@@ -20,7 +20,7 @@ use color_eyre::{
 };
 use nebula_common::{
     NebulaCliState,
-    api::{self, ListArgs, SearchArgs, Site as ApiSite},
+    api::{self, ListArgs, SearchArgs, Site as ApiSite, SyncArgs},
 };
 
 use super::{PackageStatus, PostCommandHandler, Site};
@@ -139,8 +139,9 @@ pub async fn status(_args: ClapStatusArgs, _state: &mut NebulaCliState) -> Resul
 #[derive(Args, Debug, Clone, Default)]
 pub struct ClapSyncArgs {}
 
-pub async fn sync(_args: ClapSyncArgs, _state: &mut NebulaCliState) -> Result<(), Report> {
-    Err(eyre!("not implemented"))
+pub async fn sync(_args: ClapSyncArgs, state: &mut NebulaCliState) -> Result<(), Report> {
+    let _reval = api::sync_packages(SyncArgs { last_sync: None }, state).await?;
+    Ok(())
 }
 
 //---
