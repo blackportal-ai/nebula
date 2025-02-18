@@ -32,7 +32,7 @@ pub enum PackageStatus {
 }
 
 pub use list::ListArgs;
-pub use list::list_package;
+pub use list::list_packages;
 
 use num_enum::TryFromPrimitive;
 pub use search::SearchArgs;

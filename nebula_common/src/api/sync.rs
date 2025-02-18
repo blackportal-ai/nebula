@@ -5,7 +5,7 @@ use crate::{
     NebulaCliState,
     client::list_packages,
     datapackage::{DataPackage, DataPackageNotValidated, ValidateData},
-    registry::PackageInfo,
+    registry::{FieldOptions, PackageInfo},
     storage::MetaDataSource,
 };
 
@@ -29,7 +29,8 @@ fn from_json(pi: &PackageInfo) -> Result<DataPackage, Report> {
 
 pub async fn sync_packages(_args: SyncArgs, state: &mut NebulaCliState) -> Result<SyncRe, Report> {
     // todo: use timestamp and server side decisions instead of complete list
-    let package_list = list_packages(state.client().unwrap()).await?;
+    let fo = FieldOptions { include_datapackage_json: true, include_preview_images: false };
+    let package_list = list_packages(Some(fo), state.client().unwrap()).await?;
     for pi in package_list.packages {
         // get datapackage json from package info:
         match from_json(&pi) {

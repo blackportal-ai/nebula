@@ -2,6 +2,8 @@
 //!
 //!
 
+use std::ops::{Deref, DerefMut};
+
 pub mod pb_mapper;
 
 pub type PackageType = super::registry::PackageType;
@@ -19,6 +21,20 @@ pub enum MetaDataField {
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct FieldSettings {
     optional_fields: Vec<MetaDataField>, // todo: on stack? set semantic...
+}
+
+impl Deref for FieldSettings {
+    type Target = Vec<MetaDataField>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.optional_fields
+    }
+}
+
+impl DerefMut for FieldSettings {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.optional_fields
+    }
 }
 
 /// Pagation Settings

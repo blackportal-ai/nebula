@@ -21,6 +21,7 @@ use color_eyre::{
 use nebula_common::{
     NebulaCliState,
     api::{self, ListArgs, SearchArgs, Site as ApiSite, SyncArgs},
+    nebula_proto::FieldOptions,
 };
 
 use super::{PackageStatus, PostCommandHandler, Site};
@@ -64,13 +65,24 @@ pub async fn install_package(
 
 #[derive(Args, Debug, Clone, Default)]
 pub struct ClapListArgs {
+    /// used for substring filter: not implemented yet
     query: Option<String>,
 
+    /// filter by status of packages (not installed, installed, updateable, )
     #[arg(short, long, default_value = None)]
     package_status: Option<PackageStatus>,
 
+    /// use on remote registry or locally
     #[arg(short, long, default_value = None)]
     site: Option<Site>,
+
+    /// include the complete metadata payload as json
+    #[arg(long, default_value_t = false)]
+    json: bool,
+
+    /// include all accessible preview images
+    #[arg(long, default_value_t = false)]
+    images: bool,
 }
 
 impl From<ClapListArgs> for ListArgs {
@@ -79,7 +91,13 @@ impl From<ClapListArgs> for ListArgs {
             Some(s) => s.into(),
             None => ApiSite::default(),
         };
-        ListArgs { site }
+        ListArgs {
+            site,
+            field_options: FieldOptions {
+                include_datapackage_json: value.json,
+                include_preview_images: value.images,
+            },
+        }
     }
 }
 
@@ -89,7 +107,7 @@ pub async fn list_packages<E: PostCommandHandler>(
     pch: &mut E,
 ) -> Result<(), Report> {
     let args = args.into();
-    let packages = api::list_package(args, state).await?;
+    let packages = api::list_packages(args, state).await?;
     pch.on_list(packages);
 
     Ok(())

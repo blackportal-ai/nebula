@@ -2,7 +2,7 @@
 
 use crate::{datapackage::DataPackage, registry::PackageInfo};
 
-use super::{FilterSettings, PackageType, PagationSettings, SortSettings};
+use super::{FieldSettings, FilterSettings, PackageType, PagationSettings, SortSettings};
 
 /// Maps self to Pagation Settings
 pub trait PagationMapper {
@@ -19,6 +19,10 @@ pub trait SortMapper {
     fn as_sort(&self) -> Result<SortSettings, Box<dyn std::error::Error>>;
 }
 
+pub trait FieldMapper {
+    fn as_fields(&self) -> Result<FieldSettings, Box<dyn std::error::Error>>;
+}
+
 impl PagationMapper for super::super::registry::ListPackagesRequest {
     fn as_pagation(&self) -> Result<PagationSettings, Box<dyn std::error::Error>> {
         let mut reval = PagationSettings::default();
@@ -27,6 +31,21 @@ impl PagationMapper for super::super::registry::ListPackagesRequest {
         }
         if let Some(offset) = self.offset {
             reval.offset = offset as u32;
+        }
+        Ok(reval)
+    }
+}
+
+impl FieldMapper for super::super::registry::ListPackagesRequest {
+    fn as_fields(&self) -> Result<FieldSettings, Box<dyn std::error::Error>> {
+        let mut reval = FieldSettings::default();
+        if let Some(fo) = self.field_options {
+            if fo.include_datapackage_json {
+                reval.push(super::MetaDataField::DataPackage);
+            }
+            if fo.include_preview_images {
+                reval.push(super::MetaDataField::PreviewImages);
+            }
         }
         Ok(reval)
     }
