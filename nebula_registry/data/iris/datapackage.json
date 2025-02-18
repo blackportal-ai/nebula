@@ -1,16 +1,21 @@
 {
-    "name" : "iris-classical",
-    "title" : "Iris flower dataset",
-    "licenses": [{
-        "name": "CC-BY 4.0",
-        "path": "https://creativecommons.org/licenses/by/4.0/legalcode",
-        "title": "CC-BY 4.0"
-    }],
+    "name": "iris-classical",
+    "title": "Iris flower dataset",
+    "licenses": [
+        {
+            "name": "CC-BY 4.0",
+            "path": "https://creativecommons.org/licenses/by/4.0/legalcode",
+            "title": "CC-BY 4.0"
+        }
+    ],
     "homepage": "https://archive.ics.uci.edu/dataset/53/iris",
-    "sources" : [{
-        "title": "The iris data set: In search of the source of virginica",
-        "path": "https://www.semanticscholar.org/paper/The-iris-data-set%3A-In-search-of-the-source-of-Unwin-Kleinman/4599862ea877863669a6a8e63a3c707a787d5d7e"
-    }],
+    "sources": [
+        {
+            "title": "The iris data set: In search of the source of virginica",
+            "path": "https://www.semanticscholar.org/paper/The-iris-data-set%3A-In-search-of-the-source-of-Unwin-Kleinman/4599862ea877863669a6a8e63a3c707a787d5d7e"
+        }
+    ],
+    "version": "1.0.0",
     "delta": {
         "category": "classification",
         "classes": 3,
@@ -36,11 +41,26 @@
             },
             "schema": {
                 "fields": [
-                    { "name": "sepal_length", "type": "number"},
-                    { "name": "sepal_width", "type": "number"},
-                    { "name": "petal_length", "type": "number"},
-                    { "name": "petal_width", "type": "number"},
-                    { "name": "species", "type": "string"}
+                    {
+                        "name": "sepal_length",
+                        "type": "number"
+                    },
+                    {
+                        "name": "sepal_width",
+                        "type": "number"
+                    },
+                    {
+                        "name": "petal_length",
+                        "type": "number"
+                    },
+                    {
+                        "name": "petal_width",
+                        "type": "number"
+                    },
+                    {
+                        "name": "species",
+                        "type": "string"
+                    }
                 ]
             },
             "delta": {

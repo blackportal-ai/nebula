@@ -1,12 +1,15 @@
 {
-    "name" : "mobilenet_v3_tf2",
-    "title" : "Mobilenet V3 Tensorflow Model v2",
-    "licenses": [{
-        "name": "APACHE 2.0",
-        "path": "https://www.apache.org/licenses/LICENSE-2.0",
-        "title": "Similar to CC-BY"
-    }],
+    "name": "mobilenet_v3_tf2",
+    "title": "Mobilenet V3 Tensorflow Model v2",
+    "licenses": [
+        {
+            "name": "APACHE 2.0",
+            "path": "https://www.apache.org/licenses/LICENSE-2.0",
+            "title": "Similar to CC-BY"
+        }
+    ],
     "homepage": "https://www.kaggle.com/models/google/mobilenet-v3/",
+    "version": "1.0.0",
     "delta": {
         "category": "classification",
         "classes": 1000,
@@ -69,4 +72,4 @@
             }
         }
     ]
-  }
+}
