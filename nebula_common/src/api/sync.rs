@@ -39,7 +39,7 @@ pub async fn sync_packages(_args: SyncArgs, state: &mut NebulaCliState) -> Resul
                     println!("{:?}", err);
                     continue;
                 } else {
-                    info!("Installed: {}", dp.name.clone().unwrap_or("nameless".into()));
+                    info!("Synced: {}", dp.name.clone().unwrap_or("nameless".into()));
                 }
             }
             Err(err) => {

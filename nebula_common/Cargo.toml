@@ -1,13 +1,16 @@
 [package]
 name = "nebula_common"
 version = "0.1.0"
-edition = "2021"
-authors = ["Tim Janus <tim@janus.rs>"]
+edition = "2024"
+authors = [
+    "Marcus Cvjeticanin <mjovanc@icloud.com>",
+    "Tim Janus <tim@janus.rs>",
+]
 description = "Library Crate with common functionality for the nebula-registry server and the local command line tool."
 license = "BSD-3-Clause"
 repository = "https://github.com/blackportal-ai/nebula"
 readme = "../README.md"
-rust-version = "1.83.0"
+rust-version = "1.85.0"
 homepage = "https://blackportal.ai"
 keywords = [
     "machine-learning",

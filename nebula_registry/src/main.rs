@@ -29,7 +29,10 @@ async fn main() -> Result<(), Report> {
         crate_name: env!("CARGO_CRATE_NAME").to_string(),
     };
 
-    initialize_logging(Some(LevelFilter::INFO), env_vars)?;
+    // we did not start another thread yet, therefore the initialization is safe.unsafe
+    unsafe {
+        initialize_logging(Some(LevelFilter::INFO), env_vars)?;
+    }
 
     let config = get_configuration()?;
     let app_conf = config.application;

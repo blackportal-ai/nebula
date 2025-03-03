@@ -43,11 +43,16 @@ async fn main() -> Result<(), Report> {
     let lvl = if args.verbose { LevelFilter::TRACE } else { LevelFilter::INFO };
     #[cfg(feature = "tui")]
     {
-        initialize_logging(if args.tui { None } else { Some(lvl) }, env_vars)?;
+        // we did not start another thread yet, therefore the initialization is safe.unsafe
+        unsafe {
+            initialize_logging(if args.tui { None } else { Some(lvl) }, env_vars)?;
+        }
     }
     #[cfg(not(feature = "tui"))]
-    initialize_logging(Some(lvl), env_vars)?;
-
+    // we did not start another thread yet, therefore the initialization is safe.
+    unsafe {
+        initialize_logging(Some(lvl), env_vars)?;
+    }
     let mut state = NebulaCliState::new(get_data_dir(), get_config_dir());
     state.init_config()?;
     state.init_data_source();

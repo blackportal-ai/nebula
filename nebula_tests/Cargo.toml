@@ -1,13 +1,13 @@
 [package]
 name = "nebula_tests"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 authors = ["Tim Janus <tim@janus.rs>"]
 description = "A package manager for machine learning datasets and models."
 license = "BSD-3-Clause"
 repository = "https://blackportal-ai/delta-rs/nebula"
 readme = "../README.md"
-rust-version = "1.83.0"
+rust-version = "1.85.0"
 homepage = "https://blackportal.ai"
 keywords = [
     "machine-learning",
