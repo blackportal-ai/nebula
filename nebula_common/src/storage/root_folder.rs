@@ -1,7 +1,7 @@
 use std::{collections::HashMap, fs::create_dir_all, ops::Deref, path::PathBuf, str::FromStr};
 
 use color_eyre::eyre::{Report, eyre};
-use tracing::info;
+use tracing::{error, info};
 use uuid::Uuid;
 
 use crate::{
@@ -23,6 +23,7 @@ pub struct RootFolderSource {
 
 fn get_datapackage_file_candidates_from_folder(
     path: &PathBuf,
+    recursive: bool,
     candidates: &mut Vec<PathBuf>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     // check folders for datapackage.json:
@@ -35,6 +36,9 @@ fn get_datapackage_file_candidates_from_folder(
                 path.push("datapackage.json");
                 if path.is_file() {
                     candidates.push(path);
+                } else if recursive {
+                    path.pop();
+                    get_datapackage_file_candidates_from_folder(&path, false, candidates)?;
                 }
             }
         }
@@ -45,6 +49,7 @@ fn get_datapackage_file_candidates_from_folder(
 
 impl RootFolderSource {
     pub fn new_from_folder(path: PathBuf) -> Self {
+        info!("Using root-folder data source at '{}'", path.display());
         let mut reval = RootFolderSource { path, buf: HashMap::new() };
         reval.sync_all().unwrap();
         reval
@@ -52,13 +57,16 @@ impl RootFolderSource {
 
     fn sync_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let mut candidates = vec![];
-        get_datapackage_file_candidates_from_folder(&self.path, &mut candidates)?;
+        get_datapackage_file_candidates_from_folder(&self.path, true, &mut candidates)?;
 
         for candidate in candidates {
+            let path = candidate.clone();
             match self.sync_file(candidate) {
-                Ok(_) => {}
+                Ok(_) => {
+                    info!("Loaded {}", path.display());
+                }
                 Err(_) => {
-                    // todo error reporting
+                    error!("Could not load '{}' for root folder data source.", path.display());
                 }
             }
         }
@@ -120,7 +128,7 @@ impl MetaDataSource for RootFolderSource {
             return Err(eyre!("package missing name"));
         };
 
-        let version = if let Some(version) = package.name.as_ref() {
+        let version = if let Some(version) = package.version.as_ref() {
             version
         } else {
             return Err(eyre!("Package missing version"));
@@ -156,16 +164,21 @@ mod test {
     use super::*;
     use crate::datapackage::{DataPackageNotValidated, DataResourceNotValidated, ValidateData};
 
+    fn generate_example_dp() -> DataPackageNotValidated {
+        let res = DataResourceNotValidated { name: "iris.csv".into(), ..Default::default() };
+        DataPackageNotValidated {
+            resources: vec![res],
+            name: Some("iris".into()),
+            id: Some(Uuid::new_v4().to_string()),
+            ..Default::default()
+        }
+    }
+
     #[tokio::test]
     #[should_panic]
     pub async fn test_put_missing_version() {
         let mut rf = RootFolderSource::new_from_folder(PathBuf::from_str("tmp").unwrap());
-        let res = DataResourceNotValidated { name: "iris.csv".into(), ..Default::default() };
-        let package = DataPackageNotValidated {
-            resources: vec![res],
-            name: Some("iris".into()),
-            ..Default::default()
-        };
+        let package = generate_example_dp();
 
         let dp = package.validate().unwrap();
         rf.put_package_metadata(&dp).await.expect("version is missing, so should panic");
@@ -174,13 +187,8 @@ mod test {
     #[tokio::test]
     pub async fn test_put_valid() {
         let mut rf = RootFolderSource::new_from_folder(PathBuf::from_str("tmp").unwrap());
-        let res = DataResourceNotValidated { name: "iris.csv".into(), ..Default::default() };
-        let package = DataPackageNotValidated {
-            resources: vec![res],
-            name: Some("iris".into()),
-            version: Some("0.1.0".into()),
-            ..Default::default()
-        };
+        let mut package = generate_example_dp();
+        package.version = Some("0.1.0".into());
 
         let dp = package.validate().unwrap();
         rf.put_package_metadata(&dp).await.unwrap();
