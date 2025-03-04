@@ -1,6 +1,7 @@
-use std::{collections::HashMap, fs::create_dir_all, ops::Deref, path::PathBuf};
+use std::{collections::HashMap, fs::create_dir_all, ops::Deref, path::PathBuf, str::FromStr};
 
-use color_eyre::eyre::Report;
+use color_eyre::eyre::{Report, eyre};
+use tracing::info;
 use uuid::Uuid;
 
 use crate::{
@@ -85,6 +86,11 @@ impl MetaDataSource for RootFolderSource {
     }
 
     async fn get_package(&self, query: &str, _filter: FilterSettings) -> Option<DataPackage> {
+        info!("get_package");
+        self.buf
+            .values()
+            .for_each(|el| info!("id: {}, name='{}'", el.0, el.1.name.clone().unwrap()));
+
         self.buf
             .values()
             .filter_map(|(_, v)| {
@@ -107,13 +113,37 @@ impl MetaDataSource for RootFolderSource {
     async fn put_package_metadata(&mut self, package: &DataPackage) -> Result<(), Report> {
         // todo: error if version or name not given
 
+        // some sanity checks:
+        let name = if let Some(name) = package.name.as_ref() {
+            name
+        } else {
+            return Err(eyre!("package missing name"));
+        };
+
+        let version = if let Some(version) = package.name.as_ref() {
+            version
+        } else {
+            return Err(eyre!("Package missing version"));
+        };
+
+        let id: Uuid = if let Some(id) = package.id.as_ref() {
+            match Uuid::from_str(id) {
+                Ok(id) => id,
+                Err(_) => return Err(eyre!("Malformed id")),
+            }
+        } else {
+            return Err(eyre!("Package missing id"));
+        };
+
         // ensure folder is there
-        let folder =
-            self.path.join(package.name.as_ref().unwrap()).join(package.version.as_ref().unwrap());
+        let folder = self.path.join(name).join(version);
         create_dir_all(folder.clone()).unwrap();
         let json = serde_json::ser::to_string_pretty(package.deref()).unwrap();
         let dp_path = folder.join("datapackage.json");
-        std::fs::write(dp_path, json).unwrap();
+        std::fs::write(&dp_path, json).unwrap();
+
+        // save to local buffer:
+        self.buf.insert(dp_path, (id, package.clone()));
 
         Ok(())
     }

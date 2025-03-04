@@ -9,7 +9,8 @@ use clap::{Parser, Subcommand, ValueEnum};
 use color_eyre::{Section, eyre::Report};
 use nebula_common::{
     NebulaCliState,
-    api::{PackageStatus as ApiPackageStatus, Site as ApiSite},
+    api::{ListResult, PackageStatus as ApiPackageStatus, Site as ApiSite},
+    datapackage::DataPackage,
     nebula_proto::PackageInfo,
 };
 
@@ -41,12 +42,12 @@ pub struct Cli {
     /// command that is executed
     pub cmd: Option<Command>,
 
-    /// Tick rate, i.e. number of ticks per second
+    /// Tick rate, i.e. number of ticks per second in tui
     #[cfg(feature = "tui")]
     #[arg(short, long, value_name = "FLOAT", default_value_t = 4.0)]
     pub tick_rate: f64,
 
-    /// Frame rate, i.e. number of frames per second
+    /// Frame rate, i.e. number of frames per second in tui
     #[cfg(feature = "tui")]
     #[arg(short, long, value_name = "FLOAT", default_value_t = 60.0)]
     pub frame_rate: f64,
@@ -116,10 +117,10 @@ pub enum Command {
     /// Uninstall a specific package or all packages
     Uninstall(ClapUninstallArgs),
 
-    /// search packages by specific criteria
+    /// Searches packages by specific criteria on a remote registry
     Search(ClapSearchArgs),
 
-    /// list packages that fit specific criteria, e.g. installed, updatedable, etc.
+    /// List packages that fit specific criteria on the client side, e.g. installed, updatedable, etc.
     List(ClapListArgs),
 
     /// explore the details of a specific package
@@ -138,7 +139,7 @@ pub trait PostCommandHandler {
     fn on_update(&self) {}
     fn on_uninstall(&self) {}
     fn on_search_packages(&self, _packages: Vec<PackageInfo>) {}
-    fn on_list(&self, _packages: Vec<PackageInfo>) {}
+    fn on_list(&self, _res: ListResult) {}
     fn on_explore(&self) {}
     fn on_sync(&self) {}
     fn on_cli_error(&self, _rep: &Report) {}
@@ -158,6 +159,19 @@ impl LegacyPostCommandHandler {
         println!("Desc: {}", pi.description);
         println!("{} bytes download, {} bytes installed", pi.download_size, pi.installed_size);
     }
+
+    fn print_datapackage_info(&self, dp: &DataPackage) {
+        let name = dp.name.as_ref().unwrap();
+        let version = dp.version.as_ref().unwrap();
+        let id = dp.id.as_ref().unwrap();
+
+        println!("{}-{} | {}", name, version, id);
+
+        if let Some(desc) = dp.description.as_ref() {
+            println!("Desc: {}", desc);
+        }
+        //println!("{} bytes download, {} bytes installed", dp., pi.installed_size);
+    }
 }
 
 impl PostCommandHandler for LegacyPostCommandHandler {
@@ -165,24 +179,26 @@ impl PostCommandHandler for LegacyPostCommandHandler {
         if packages.is_empty() {
             println!("No package found.");
         } else {
-            for (i, pi) in packages.iter().enumerate() {
-                if i > 1 {
-                    println!();
-                }
+            for pi in packages.iter() {
                 self.print_package_info(pi);
             }
         }
     }
 
-    fn on_list(&self, packages: Vec<PackageInfo>) {
+    fn on_list(&self, res: ListResult) {
+        let packages = &res.packages;
         if packages.is_empty() {
             println!("No packages found.");
         } else {
-            for (i, pi) in packages.iter().enumerate() {
-                if i > 1 {
-                    println!();
-                }
-                self.print_package_info(pi);
+            if let Some(client_info) = res.client_packages {
+                println!(
+                    "Showing {}/{}",
+                    client_info.offset.unwrap(),
+                    client_info.offset.unwrap() + client_info.limit.unwrap()
+                )
+            }
+            for dp in packages.iter() {
+                self.print_datapackage_info(dp);
             }
         }
     }

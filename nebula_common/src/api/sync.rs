@@ -16,13 +16,8 @@ pub struct SyncArgs {
     pub last_sync: Option<f32>,
 }
 
-fn tmp() -> String {
-    include_str!("../../../nebula_registry/data/cifar10/datapackage.json").into()
-}
-
 fn from_json(pi: &PackageInfo) -> Result<DataPackage, Report> {
     let data_package: DataPackageNotValidated = serde_json::from_str(pi.datapackage_json())?;
-    //let data_package: DataPackageNotValidated = serde_json::from_str(tmp().as_str())?;
 
     data_package.validate().map_err(|e| eyre::Report::msg(e.to_string()))
 }
@@ -31,6 +26,7 @@ pub async fn sync_packages(_args: SyncArgs, state: &mut NebulaCliState) -> Resul
     // todo: use timestamp and server side decisions instead of complete list
     let fo = FieldOptions { include_datapackage_json: true, include_preview_images: false };
     let package_list = list_packages(Some(fo), state.client().unwrap()).await?;
+
     for pi in package_list.packages {
         // get datapackage json from package info:
         match from_json(&pi) {

@@ -1,6 +1,7 @@
 {
     "name": "mobilenet_v3_tf2",
     "title": "Mobilenet V3 Tensorflow Model v2",
+    "id": "bed452a1-bcc4-45b1-817e-2304943699bd",
     "licenses": [
         {
             "name": "APACHE 2.0",

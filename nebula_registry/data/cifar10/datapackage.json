@@ -1,5 +1,6 @@
 {
     "name": "cifar-10-binary",
+    "id": "19c5b9ae-2478-4973-857f-bf2568df537d",
     "title": "Cifar-10 60'000 32x32 coloured images in 10 classes",
     "licenses": [
         {

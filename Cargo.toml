@@ -24,7 +24,7 @@ prost-types = { version = "0.13" }
 
 # tracing and error reporting dependencies
 color-eyre = { version = "0.6.3" }
-#thiserror = { version = "2.0" }
+thiserror = { version = "2.0" }
 tracing = { version = "0.1" }
 tracing-error = { version = "0.2" }
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }

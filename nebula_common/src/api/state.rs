@@ -34,6 +34,12 @@ pub struct NebulaState {
     data_source: Option<Arc<Mutex<Box<dyn MetaDataSource + Send + Sync>>>>,
 }
 
+#[derive(thiserror::Error, Debug)]
+pub enum DataSourceError {
+    #[error("Data Source not available")]
+    NotAvailable,
+}
+
 impl NebulaState {
     pub fn new(data_folder: PathBuf, config_folder: PathBuf) -> Self {
         let registry_path = data_folder.join("local-registry");
@@ -72,12 +78,16 @@ impl NebulaState {
         }
     }
 
-    /// this method makes sense as soon as async closures are stablized to get rid of the lifetime parameter
-    #[cfg(any())]
-    pub fn apply_data_source<F: Fn(&mut dyn MetaDataSource) -> bool>(&mut self, ftor: F) -> bool {
+    pub async fn apply_data_source<R>(
+        &mut self,
+        ftor: impl AsyncFn(&mut dyn MetaDataSource) -> Result<R, DataSourceError>,
+    ) -> Result<R, DataSourceError> {
         match &mut self.data_source {
-            Some(k) => ftor(k.deref_mut()),
-            None => false,
+            Some(k) => {
+                let mut g = k.lock().await;
+                ftor(g.as_mut()).await
+            }
+            None => Err(DataSourceError::NotAvailable),
         }
     }
 

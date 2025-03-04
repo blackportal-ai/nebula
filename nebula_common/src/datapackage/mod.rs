@@ -5,9 +5,11 @@
 //! structs [DeltaDataPackage] and [DeltaDataResource].
 //!
 //! We use the module [pod] for parsing based on [serde]. The [validated] module contains the
-//! types that are valid in respect to the schema of the data package standard.
+//! types that are valid in respect to the schema of the data package standard. The module
+//! [crate]
 
 mod delta;
+pub mod from;
 mod pod;
 mod validated;
 

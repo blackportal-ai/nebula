@@ -6,7 +6,7 @@ authors = [
     "Marcus Cvjeticanin <mjovanc@icloud.com>",
     "Tim Janus <tim@janus.rs>",
 ]
-description = "A command line client for machine learning datasets and models at the Nebula registry."
+description = "A package manager for machine learning datasets and models acting as client for Nebula registries."
 license = "BSD-3-Clause"
 repository = "https://github.com/blackportal-ai/nebula"
 readme = "../README.md"

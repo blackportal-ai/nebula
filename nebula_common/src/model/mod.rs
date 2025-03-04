@@ -58,7 +58,7 @@ pub struct SortSettings {}
 /// Filter Settings, not implemnted
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct FilterSettings {
-    package_type: PackageType,
+    pub package_type: PackageType,
 }
 
 impl Default for FilterSettings {

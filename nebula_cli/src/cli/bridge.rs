@@ -107,8 +107,9 @@ pub async fn list_packages<E: PostCommandHandler>(
     pch: &mut E,
 ) -> Result<(), Report> {
     let args = args.into();
-    let packages = api::list_packages(args, state).await?;
-    pch.on_list(packages);
+    let list_result = api::list_packages(args, state).await?;
+
+    pch.on_list(list_result);
 
     Ok(())
 }
