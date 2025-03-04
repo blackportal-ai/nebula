@@ -9,8 +9,9 @@ use clap::{Parser, Subcommand, ValueEnum};
 use color_eyre::{Section, eyre::Report};
 use nebula_common::{
     NebulaCliState,
-    api::{ListResult, PackageStatus as ApiPackageStatus, Site as ApiSite},
+    api::ListResult,
     datapackage::DataPackage,
+    model::{PackageStatus as ApiPackageStatus, PackageType as ApiPackageType},
     nebula_proto::PackageInfo,
 };
 
@@ -53,24 +54,14 @@ pub struct Cli {
     pub frame_rate: f64,
 }
 
+/// This enum is the same as [nebula_common::api::PackageStatus] but extends it with [clap::ValueEnum]
+///
+/// todo: check if there is a way with less duplicated code
 #[repr(u8)]
-#[derive(ValueEnum, Debug, Clone, Default)]
-pub enum Site {
-    #[default]
-    Local,
-
-    Remote,
-}
-
-impl From<Site> for ApiSite {
-    fn from(value: Site) -> Self {
-        ApiSite::try_from(value as u8).unwrap()
-    }
-}
-
-#[repr(u8)]
-#[derive(ValueEnum, Debug, Clone, Default)]
+#[derive(ValueEnum, Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub enum PackageStatus {
+    All,
+
     NotInstalled,
 
     #[default]
@@ -82,6 +73,26 @@ pub enum PackageStatus {
 impl From<PackageStatus> for ApiPackageStatus {
     fn from(value: PackageStatus) -> Self {
         ApiPackageStatus::try_from(value as u8).unwrap()
+    }
+}
+
+/// This enum is the same as [nebula_common::api::PackageType] but extends it with [clap::ValueEnum]
+///
+/// todo: check if there is a way with less duplicated code
+#[repr(u8)]
+#[derive(ValueEnum, Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum PackageType {
+    #[default]
+    Both,
+
+    Dataset,
+
+    Model,
+}
+
+impl From<PackageType> for ApiPackageType {
+    fn from(value: PackageType) -> Self {
+        ApiPackageType::try_from(value as u8).unwrap()
     }
 }
 
@@ -102,36 +113,42 @@ pub struct CmdArgs {
 )]
 #[strum_discriminants(name(CommandVariants))]
 pub enum Command {
-    /// init the virtual environment in the given folder
+    /// init a virtual environment in the given folder (not yet)
     Init(ClapInitArgs),
 
-    /// prints status information that depend on the registy and virtual environment
+    /// prints status information (not yet)
     Status(ClapStatusArgs),
 
-    /// Installs a package
+    /// Installs a package (not yet)
     Install(ClapInstallArgs),
 
-    /// Updates a specific package or all packages
+    /// Updates a specific package or all packages (not yet)
     Update(ClapUpdateArgs),
 
-    /// Uninstall a specific package or all packages
+    /// Uninstall a specific package or all packages (not yet)
     Uninstall(ClapUninstallArgs),
 
-    /// Searches packages by specific criteria on a remote registry
+    /// Searches packages by complex criteria (not yet)
     Search(ClapSearchArgs),
 
-    /// List packages that fit specific criteria on the client side, e.g. installed, updatedable, etc.
+    /// List packages that fit simple criteria e.g.(non)-installed,
     List(ClapListArgs),
-
-    /// explore the details of a specific package
-    Explore(ClapExploreArgs),
 
     /// Sync the local cache with the remote registry
     Sync(ClapSyncArgs),
-    //Registry(RegistryArgs),
 }
 
 #[allow(dead_code)]
+#[repr(u8)]
+#[derive(TryFromPrimitive, Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum PackageType {
+    #[default]
+    Both,
+
+    Dataset,
+
+    Model,
+}
 pub trait PostCommandHandler {
     fn on_init(&self) {}
     fn on_status(&self) {}
@@ -140,7 +157,6 @@ pub trait PostCommandHandler {
     fn on_uninstall(&self) {}
     fn on_search_packages(&self, _packages: Vec<PackageInfo>) {}
     fn on_list(&self, _res: ListResult) {}
-    fn on_explore(&self) {}
     fn on_sync(&self) {}
     fn on_cli_error(&self, _rep: &Report) {}
     fn on_clap_error(&self, _rep: &Report) {}
@@ -190,13 +206,6 @@ impl PostCommandHandler for LegacyPostCommandHandler {
         if packages.is_empty() {
             println!("No packages found.");
         } else {
-            if let Some(client_info) = res.client_packages {
-                println!(
-                    "Showing {}/{}",
-                    client_info.offset.unwrap(),
-                    client_info.offset.unwrap() + client_info.limit.unwrap()
-                )
-            }
             for dp in packages.iter() {
                 self.print_datapackage_info(dp);
             }
@@ -236,7 +245,6 @@ where
                 Command::Search(search_args) => search_packages(search_args, state, pch).await,
                 Command::List(list_args) => list_packages(list_args, state, pch).await,
 
-                Command::Explore(explore_args) => explore(explore_args, state).await,
                 Command::Sync(sync_args) => sync(sync_args, state).await,
             };
 
@@ -257,22 +265,12 @@ where
 #[cfg(test)]
 mod test {
     use super::*;
-
-    #[test]
-    fn test_site_conversion() {
-        // Test conversion from Site::Local
-        let local: ApiSite = Site::Local.into();
-        // Since Site has #[repr(u8)] and Local is default variant (0)
-        assert_eq!(local, ApiSite::Local);
-
-        // Test conversion from Site::Remote
-        let remote: ApiSite = Site::Remote.into();
-        // Expect Remote to be represented as 1
-        assert_eq!(remote, ApiSite::Remote);
-    }
-
     #[test]
     fn test_package_status_conversion() {
+        let all: ApiPackageStatus = PackageStatus::All.into();
+        // Expect enum value corresponding to 0
+        assert_eq!(all, ApiPackageStatus::All);
+
         // Test conversion for PackageStatus::NotInstalled
         let not_installed: ApiPackageStatus = PackageStatus::NotInstalled.into();
         // Expect enum value corresponding to 0

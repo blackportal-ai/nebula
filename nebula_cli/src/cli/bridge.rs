@@ -20,23 +20,10 @@ use color_eyre::{
 };
 use nebula_common::{
     NebulaCliState,
-    api::{self, ListArgs, SearchArgs, Site as ApiSite, SyncArgs},
-    nebula_proto::FieldOptions,
+    api::{self, ListArgs, SearchArgs, SyncArgs},
 };
 
-use super::{PackageStatus, PostCommandHandler, Site};
-
-//---
-
-#[derive(Args, Debug, Clone, Default)]
-pub struct ClapExploreArgs {
-    #[arg(short, long)]
-    package_name: String,
-}
-
-pub async fn explore(_args: ClapExploreArgs, _state: &mut NebulaCliState) -> Result<(), Report> {
-    Err(eyre!("not implemented"))
-}
+use super::{PackageStatus, PackageType, PostCommandHandler};
 
 //---
 
@@ -65,38 +52,20 @@ pub async fn install_package(
 
 #[derive(Args, Debug, Clone, Default)]
 pub struct ClapListArgs {
-    /// used for substring filter: not implemented yet
-    query: Option<String>,
+    /// filter by status of packages: All (default), (not)-installed, updateable
+    #[arg(short('s'), long, default_value = "all")]
+    package_status: PackageStatus,
 
-    /// filter by status of packages (not installed, installed, updateable, )
-    #[arg(short, long, default_value = None)]
-    package_status: Option<PackageStatus>,
-
-    /// use on remote registry or locally
-    #[arg(short, long, default_value = None)]
-    site: Option<Site>,
-
-    /// include the complete metadata payload as json
-    #[arg(long, default_value_t = false)]
-    json: bool,
-
-    /// include all accessible preview images
-    #[arg(long, default_value_t = false)]
-    images: bool,
+    /// filter by type of package: dataset, model, both(default)
+    #[arg(short('t'), long, default_value = "both")]
+    package_type: PackageType,
 }
 
 impl From<ClapListArgs> for ListArgs {
     fn from(value: ClapListArgs) -> Self {
-        let site = match value.site {
-            Some(s) => s.into(),
-            None => ApiSite::default(),
-        };
         ListArgs {
-            site,
-            field_options: FieldOptions {
-                include_datapackage_json: value.json,
-                include_preview_images: value.images,
-            },
+            package_status: value.package_status.into(),
+            package_type: value.package_type.into(),
         }
     }
 }
@@ -119,11 +88,12 @@ pub async fn list_packages<E: PostCommandHandler>(
 #[derive(Args, Debug, Clone, Default)]
 pub struct ClapSearchArgs {
     query: String,
+    // todo
 }
 
 impl From<ClapSearchArgs> for SearchArgs {
     fn from(value: ClapSearchArgs) -> Self {
-        Self { query: value.query, location: api::Site::Local }
+        Self { query: value.query }
     }
 }
 

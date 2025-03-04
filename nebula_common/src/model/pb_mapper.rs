@@ -68,7 +68,7 @@ impl FilterMapper for super::super::registry::PackageRequest {
     fn as_filter(&self) -> Result<FilterSettings, Box<dyn std::error::Error>> {
         let mut reval = FilterSettings::default();
         if let Some(pt) = self.package_type {
-            reval.package_type = PackageType::try_from(pt).unwrap();
+            reval.package_type = PackageType::try_from(pt as u8).unwrap();
         }
         Ok(reval)
     }

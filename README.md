@@ -21,48 +21,56 @@
 
 A package manager for machine learning datasets and models.
 
+## Main Goal
+
+Design of overal architecture and documentation to start onboarding contributors.
+
 ## Nebula CLI
+
+Uses either a legecy (interactive) command-line or a ratatui frontend. Whereas the latter is
+experimental and hidden behind the feature flag `tui`. 
 
 ### Commands
 
-The Nebula CLI provides a set of commands to interact with the Nebula package manager. The following commands will be implemented:
+The Nebula CLI provides a set of commands to interact with the Nebula package manager. 
+This is a copy from the `nebula_cli --help` output:
 
 ```shell
-nebula init # Initializes the local Nebula environment
+A package manager for machine learning datasets and models acting as client for Nebula registries.
 
-nebula install <package_name> [--version <version>] # Downloads and installs a dataset or model
-nebula search <query> # Searches for datasets or models in the Nebula repository
-nebula list # Lists all installed packages
-nebula update [--all | <package_name>] # Updates datasets and models to the latest version
-nebula remove <package_name> # Removes a specified dataset or model
-nebula info <package_name> # Displays detailed dataset or model information
+Usage: nebula_cli [OPTIONS] [COMMAND]
 
-nebula explore <package_name> [--filter <json_path>] # Interactively explores package data
+Commands:
+  init       init a virtual environment in the given folder (not yet)
+  status     prints status information (not yet)
+  install    Installs a package (not yet)
+  update     Updates a specific package or all packages (not yet)
+  uninstall  Uninstall a specific package or all packages (not yet)
+  search     Searches packages by complex criteria (not yet)
+  list       List packages that fit simple criteria e.g.(non)-installed,
+  sync       Sync the local cache with the remote registry
+  help       Print this message or the help of the given subcommand(s)
 
-nebula config --set <key> <value> # Sets a configuration option
-nebula config --get <key> # Retrieves a configuration value
-
-nebula sync # Synchronizes local datasets and models with the remote repository
-
-nebula cache clean [--force] # Clears the local dataset and models cache
-nebula cache list # Lists cached datasets and models
-
-nebula registry set <registry_url> # Sets the target registry URL
-
-nebula <command> --help # Shows help for a specific command
+Options:
+      --tui                 use a [ratatui] based terminal user interface instead of a simple cmd-tool
+  -i, --interactive         start the cmd-tool in interactive mode, that allows typing multiple commands
+  -v, --verbose             use verbose output, only in non TUI mode
+  -t, --tick-rate <FLOAT>   Tick rate, i.e. number of ticks per second in tui [default: 4]
+  -f, --frame-rate <FLOAT>  Frame rate, i.e. number of frames per second in tui [default: 60]
+  -h, --help                Print help
+  -V, --version             Print version
+help # Shows help for a specific command
 ```
 
 Examples:
 
 ```shell
+nebula sync # gets the newest metadata locally from the remote registry
 nebula search climate_data # Search for packages related to climate data
 nebula install neural_net_model_v2 --version 1.0.1 # Install a specific version of a model
 nebula install climate_dataset_2023 # Install the latest version of a dataset
-nebula explore climate_data_2023 --filter .temperature # Explore specific data within a dataset
 nebula update --all # Update all installed datasets and models
-nebula remove outdated_model # Remove an outdated model
-nebula info new_dataset # Get detailed info about a new dataset
-nebula registry set https://myregistry.example.com # Set the target registry URL
+nebula uninstall outdated_model # Remove an outdated model
 ```
 
 ## Nebula Registry

@@ -144,3 +144,5 @@ nebula_registry/data/mobilenetv3_tf2/*
 
 **/tmp/**
 tmp.*
+
+**/vendor/
