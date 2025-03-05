@@ -138,17 +138,6 @@ pub enum Command {
     Sync(ClapSyncArgs),
 }
 
-#[allow(dead_code)]
-#[repr(u8)]
-#[derive(TryFromPrimitive, Debug, Clone, Copy, Default, PartialEq, Eq)]
-pub enum PackageType {
-    #[default]
-    Both,
-
-    Dataset,
-
-    Model,
-}
 pub trait PostCommandHandler {
     fn on_init(&self) {}
     fn on_status(&self) {}
