@@ -102,7 +102,7 @@ impl MetaDataSource for RootFolderSource {
         self.buf
             .values()
             .filter_map(|(_, v)| {
-                if v.name.clone().map_or(false, |el| el.contains(query)) { Some(v) } else { None }
+                if v.name.clone().is_some_and(|el| el.contains(query)) { Some(v) } else { None }
             })
             .nth(0)
             .cloned()

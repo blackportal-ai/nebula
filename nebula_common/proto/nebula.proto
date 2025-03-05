@@ -20,7 +20,7 @@ service NebulaPackageQuery {
     // Gets detailed information for one specific package
     rpc GetPackageInfo (PackageRequest) returns (PackageInfo);
 
-    // List all packages with very simple search criteria (substring search)
+    // List all packages with very simple search criteria
     rpc ListPackages (ListPackagesRequest) returns (PackageList);
 
     // Search packages applying several filters

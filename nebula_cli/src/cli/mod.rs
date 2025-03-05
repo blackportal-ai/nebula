@@ -138,6 +138,7 @@ pub enum Command {
     Sync(ClapSyncArgs),
 }
 
+#[allow(dead_code)]
 pub trait PostCommandHandler {
     fn on_init(&self) {}
     fn on_status(&self) {}

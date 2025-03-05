@@ -25,6 +25,8 @@ A package manager for machine learning datasets and models.
 
 Design of overal architecture and documentation to start onboarding contributors.
 
+Current state of the [Architecture](./architecture.md)
+
 ## Nebula CLI
 
 Uses either a legecy (interactive) command-line or a ratatui frontend. Whereas the latter is
@@ -75,7 +77,26 @@ nebula uninstall outdated_model # Remove an outdated model
 
 ## Nebula Registry
 
-The Nebula CLI communicates with the registry via gRPC using Tonic. The registry can be self-hosted if desired and using the CLI we can configure the registry URL.
+The Nebula CLI communicates with the registry via gRPC using [Tonic](https://github.com/hyperium/tonic). The registry can be self-hosted if desired and using the CLI we can configure the registry URL.
+
+As for now the registry supports the following endpoints:
+
+```protobuf
+service NebulaPackageQuery {
+    // Gets detailed information for one specific package
+    rpc GetPackageInfo (PackageRequest) returns (PackageInfo);
+
+    // List all packages with very simple search criteria
+    rpc ListPackages (ListPackagesRequest) returns (PackageList);
+
+    // Search packages applying several filters
+    rpc SearchPackages (SearchPackagesRequest) returns (PackageList);
+}
+```
+
+For more information see the [proto file](./nebula_common/proto/nebula.proto).
+
+The datasets and models are stored elsewhere for now and based on the URL the client is expected to send further GET requests.
 
 ## Nebula Registry Web
 
