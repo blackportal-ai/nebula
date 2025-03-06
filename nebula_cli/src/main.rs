@@ -6,8 +6,8 @@ use std::path::PathBuf;
 use clap::Parser as _;
 use cli::Cli;
 use directories::ProjectDirs;
+use nebula_common::NebulaCliState;
 use nebula_common::configuration::tracing::{AppDefaultValuesFromEnv, initialize_logging};
-use nebula_common::{client::init_client, configuration::cli::get_configuration};
 
 use lazy_static::lazy_static;
 
@@ -43,23 +43,28 @@ async fn main() -> Result<(), Report> {
     let lvl = if args.verbose { LevelFilter::TRACE } else { LevelFilter::INFO };
     #[cfg(feature = "tui")]
     {
-        initialize_logging(if args.tui { None } else { Some(lvl) }, env_vars)?;
+        // we did not start another thread yet, therefore the initialization is safe.unsafe
+        unsafe {
+            initialize_logging(if args.tui { None } else { Some(lvl) }, env_vars)?;
+        }
     }
     #[cfg(not(feature = "tui"))]
-    initialize_logging(Some(lvl), env_vars)?;
-
-    // read config:
-    let config = get_configuration()?;
-    let reg_conf = config.remote_registry;
-    let client = init_client(reg_conf.host, reg_conf.port).await?;
+    // we did not start another thread yet, therefore the initialization is safe.
+    unsafe {
+        initialize_logging(Some(lvl), env_vars)?;
+    }
+    let mut state = NebulaCliState::new(get_data_dir(), get_config_dir());
+    state.init_config()?;
+    state.init_data_source();
+    state.init_client().await?;
 
     #[cfg(feature = "tui")]
     {
-        run_tui(args, client).await
+        run_tui(args, state).await
     }
     #[cfg(not(feature = "tui"))]
     {
-        run_legacy_cmd(args, client).await
+        run_legacy_cmd(args, state).await
     }
 }
 

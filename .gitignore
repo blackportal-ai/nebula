@@ -141,3 +141,8 @@ nebula_registry/data/mobilenetv3_tf2/*
 
 # config.toml for cargo
 .cargo/config.toml
+
+**/tmp/**
+tmp.*
+
+**/vendor/

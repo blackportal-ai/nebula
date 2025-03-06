@@ -32,7 +32,6 @@
 				"dancheg97.grpc-clicker"
 			]
 		}
-	}
-	// without that rust-analyzer crashes
-	//"remoteUser": "root"
+	},
+	"remoteUser": "vscode"
 }

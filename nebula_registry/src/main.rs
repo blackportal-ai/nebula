@@ -12,7 +12,7 @@ use nebula_common::{
         registry::get_configuration,
         tracing::{AppDefaultValuesFromEnv, initialize_logging, tracing_span_for_request},
     },
-    server::{NebulaPackageQueryMockImpl, NebulaPackageQueryServer},
+    registry::{NebulaPackageQueryMockImpl, NebulaPackageQueryServer},
     storage::root_folder::RootFolderSource,
 };
 
@@ -29,15 +29,24 @@ async fn main() -> Result<(), Report> {
         crate_name: env!("CARGO_CRATE_NAME").to_string(),
     };
 
-    initialize_logging(Some(LevelFilter::INFO), env_vars)?;
+    // we did not start another thread yet, therefore the initialization is safe.unsafe
+    unsafe {
+        initialize_logging(Some(LevelFilter::INFO), env_vars)?;
+    }
 
     let config = get_configuration()?;
     let app_conf = config.application;
 
     let addr = format!("{}:{}", app_conf.host, app_conf.port).parse()?;
 
-    let path = config.root_folder.expect("Root Folder Source expected").path.to_string();
-    let ds = RootFolderSource::new_from_folder(PathBuf::from_str(path.as_str()).unwrap());
+    // todo: use one source for data path
+    let p = if let Some(root_folder) = config.root_folder {
+        PathBuf::from_str(&root_folder.path)?
+    } else {
+        get_data_dir().join("registry")
+    };
+
+    let ds = RootFolderSource::new_from_folder(p);
     let registry = NebulaPackageQueryMockImpl::new(ds);
 
     info!("{}", version());
@@ -62,8 +71,8 @@ lazy_static! {
 }
 
 pub fn get_data_dir() -> PathBuf {
-    let directory = if let Some(s) = DATA_FOLDER.clone() {
-        s
+    let directory = if let Some(folder) = DATA_FOLDER.clone() {
+        folder
     } else if let Some(proj_dirs) = project_directory() {
         proj_dirs.data_local_dir().to_path_buf()
     } else {
@@ -73,8 +82,8 @@ pub fn get_data_dir() -> PathBuf {
 }
 
 pub fn get_config_dir() -> PathBuf {
-    let directory = if let Some(s) = CONFIG_FOLDER.clone() {
-        s
+    let directory = if let Some(folder) = CONFIG_FOLDER.clone() {
+        folder
     } else if let Some(proj_dirs) = project_directory() {
         proj_dirs.config_local_dir().to_path_buf()
     } else {

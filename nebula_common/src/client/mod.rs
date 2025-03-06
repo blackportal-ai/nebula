@@ -4,13 +4,13 @@ use color_eyre::eyre::Report;
 use tonic::Request;
 use tonic::transport::Channel;
 
-use crate::server::{ListPackagesRequest, PackageType};
+use crate::registry::{FieldOptions, ListPackagesRequest, PackageType};
 
 use super::nebula_proto::nebula_package_query_client::NebulaPackageQueryClient;
 use super::nebula_proto::{PackageInfo, PackageList, PackageRequest, SearchPackagesRequest};
 
 pub async fn init_client(
-    host: String,
+    host: &str,
     port: u16,
 ) -> Result<NebulaPackageQueryClient<Channel>, Report> {
     let client = NebulaPackageQueryClient::connect(format!("http://{}:{}", host, port)).await?;
@@ -18,10 +18,11 @@ pub async fn init_client(
 }
 
 pub async fn list_packages(
+    field_options: Option<FieldOptions>,
     client: &mut NebulaPackageQueryClient<Channel>,
 ) -> Result<PackageList, Report> {
     let request = Request::new(ListPackagesRequest {
-        field_options: None,
+        field_options,
         package_type: PackageType::Both as i32,
         sort: None,
         limit: Some(30),

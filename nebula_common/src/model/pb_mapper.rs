@@ -1,8 +1,8 @@
 //! Contains functionality to map protobuf related types to nebulas internal model
 
-use crate::{datapackage::DataPackage, server::PackageInfo};
+use crate::{datapackage::DataPackage, registry::PackageInfo};
 
-use super::{FilterSettings, PackageType, PagationSettings, SortSettings};
+use super::{FieldSettings, FilterSettings, PackageType, PagationSettings, SortSettings};
 
 /// Maps self to Pagation Settings
 pub trait PagationMapper {
@@ -19,7 +19,11 @@ pub trait SortMapper {
     fn as_sort(&self) -> Result<SortSettings, Box<dyn std::error::Error>>;
 }
 
-impl PagationMapper for super::super::server::ListPackagesRequest {
+pub trait FieldMapper {
+    fn as_fields(&self) -> Result<FieldSettings, Box<dyn std::error::Error>>;
+}
+
+impl PagationMapper for super::super::registry::ListPackagesRequest {
     fn as_pagation(&self) -> Result<PagationSettings, Box<dyn std::error::Error>> {
         let mut reval = PagationSettings::default();
         if let Some(limit) = self.limit {
@@ -32,7 +36,22 @@ impl PagationMapper for super::super::server::ListPackagesRequest {
     }
 }
 
-impl PagationMapper for super::super::server::SearchPackagesRequest {
+impl FieldMapper for super::super::registry::ListPackagesRequest {
+    fn as_fields(&self) -> Result<FieldSettings, Box<dyn std::error::Error>> {
+        let mut reval = FieldSettings::default();
+        if let Some(fo) = self.field_options {
+            if fo.include_datapackage_json {
+                reval.push(super::MetaDataField::DataPackage);
+            }
+            if fo.include_preview_images {
+                reval.push(super::MetaDataField::PreviewImages);
+            }
+        }
+        Ok(reval)
+    }
+}
+
+impl PagationMapper for super::super::registry::SearchPackagesRequest {
     fn as_pagation(&self) -> Result<PagationSettings, Box<dyn std::error::Error>> {
         let mut reval = PagationSettings::default();
         if let Some(limit) = self.limit {
@@ -45,11 +64,11 @@ impl PagationMapper for super::super::server::SearchPackagesRequest {
     }
 }
 
-impl FilterMapper for super::super::server::PackageRequest {
+impl FilterMapper for super::super::registry::PackageRequest {
     fn as_filter(&self) -> Result<FilterSettings, Box<dyn std::error::Error>> {
         let mut reval = FilterSettings::default();
         if let Some(pt) = self.package_type {
-            reval.package_type = PackageType::try_from(pt).unwrap();
+            reval.package_type = PackageType::try_from(pt as u8).unwrap();
         }
         Ok(reval)
     }
@@ -59,7 +78,7 @@ impl FilterMapper for super::super::server::PackageRequest {
     }
 }
 
-impl FilterMapper for super::super::server::SearchPackagesRequest {
+impl FilterMapper for super::super::registry::SearchPackagesRequest {
     fn as_filter(&self) -> Result<FilterSettings, Box<dyn std::error::Error>> {
         Ok(FilterSettings::default())
     }
@@ -69,7 +88,7 @@ impl FilterMapper for super::super::server::SearchPackagesRequest {
     }
 }
 
-impl SortMapper for super::super::server::SearchPackagesRequest {
+impl SortMapper for super::super::registry::SearchPackagesRequest {
     fn as_sort(&self) -> Result<SortSettings, Box<dyn std::error::Error>> {
         Ok(SortSettings::default())
     }
@@ -89,7 +108,7 @@ impl From<DataPackage> for PackageInfo {
             },
             description: match inner.description.take() {
                 Some(v) => v,
-                None => "No Information".to_string(),
+                None => "No Description".to_string(),
             },
             license: {
                 let mut reval = String::new();

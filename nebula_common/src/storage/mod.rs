@@ -1,6 +1,7 @@
 pub mod root_folder;
 
-use std::future::Future;
+use async_trait::async_trait;
+use color_eyre::eyre::Report;
 
 use crate::{
     datapackage::DataPackage,
@@ -8,26 +9,25 @@ use crate::{
 };
 
 /// Trait to receive package meta information from a data source like the filesystem or a database
-pub trait MetaDataSource {
-    fn list_packages(
+#[async_trait]
+pub trait MetaDataSource: std::fmt::Debug {
+    async fn list_packages(
         &self,
         sort: SortSettings,
         filter: FilterSettings,
         pagation: PagationSettings,
         fields: FieldSettings,
-    ) -> impl Future<Output = Vec<DataPackage>> + Send;
+    ) -> Vec<DataPackage>;
 
-    fn get_package(
-        &self,
-        query: &str,
-        filter: FilterSettings,
-    ) -> impl Future<Output = Option<DataPackage>> + Send;
+    async fn get_package(&self, query: &str, filter: FilterSettings) -> Option<DataPackage>;
 
-    fn search_package(
+    async fn search_package(
         &self,
         search_query: &str,
         sort: SortSettings,
         filter: FilterSettings,
         pagation: PagationSettings,
-    ) -> impl Future<Output = Vec<DataPackage>> + Send;
+    ) -> Vec<DataPackage>;
+
+    async fn put_package_metadata(&mut self, package: &DataPackage) -> Result<(), Report>;
 }

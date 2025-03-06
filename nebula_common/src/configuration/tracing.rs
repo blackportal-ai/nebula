@@ -22,7 +22,13 @@ pub struct AppDefaultValuesFromEnv {
 ///
 /// console_lvl: Option contains the level that shall be logged onto the console
 /// env_vars: A datastructure with variables catched at binary-crate level from the environment
-pub fn initialize_logging(
+///
+/// # Safety
+///
+/// Besides from windows this function has to be called as long as the application is
+/// still single-threaded. See [safety section](https://doc.rust-lang.org/std/env/fn.set_var.html#safety) of
+/// [std::env::set_var].
+pub unsafe fn initialize_logging(
     console_lvl: Option<LevelFilter>,
     env_vars: AppDefaultValuesFromEnv,
 ) -> Result<(), Report> {
@@ -31,12 +37,14 @@ pub fn initialize_logging(
     let log_path = directory.join(env_vars.log_file);
     let log_file = std::fs::File::create(log_path)?;
 
-    std::env::set_var(
-        "RUST_LOG",
-        std::env::var("RUST_LOG")
-            .or_else(|_| std::env::var(env_vars.log_env))
-            .unwrap_or_else(|_| format!("{}=info", env_vars.crate_name)),
-    );
+    unsafe {
+        std::env::set_var(
+            "RUST_LOG",
+            std::env::var("RUST_LOG")
+                .or_else(|_| std::env::var(env_vars.log_env))
+                .unwrap_or_else(|_| format!("{}=info", env_vars.crate_name)),
+        );
+    }
 
     let file_subscriber = tracing_subscriber::fmt::layer()
         .with_file(true)

@@ -1,21 +1,21 @@
 [package]
 name = "nebula_cli"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 authors = [
     "Marcus Cvjeticanin <mjovanc@icloud.com>",
     "Tim Janus <tim@janus.rs>",
 ]
-description = "A command line client for machine learning datasets and models at the Nebula registry."
+description = "A package manager for machine learning datasets and models acting as client for Nebula registries."
 license = "BSD-3-Clause"
 repository = "https://github.com/blackportal-ai/nebula"
 readme = "../README.md"
-rust-version = "1.83.0"
+rust-version = "1.85.0"
 homepage = "https://blackportal.ai"
 keywords = ["machine-learning", "ml", "framework", "cli", "datasets"]
 
 [features]
-default = ["tui"]
+default = []
 tui = ["dep:ratatui", "dep:crossterm", "dep:signal-hook"]
 
 [dependencies]

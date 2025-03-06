@@ -1,5 +1,7 @@
-use std::{collections::HashMap, path::PathBuf};
+use std::{collections::HashMap, fs::create_dir_all, ops::Deref, path::PathBuf, str::FromStr};
 
+use color_eyre::eyre::{Report, eyre};
+use tracing::{error, info};
 use uuid::Uuid;
 
 use crate::{
@@ -7,9 +9,12 @@ use crate::{
     model::{FieldSettings, FilterSettings, PagationSettings, SortSettings},
 };
 
+use async_trait::async_trait;
+
 use super::MetaDataSource;
 
 /// Reads datapackage.json files from the filesystem
+#[derive(Debug)]
 pub struct RootFolderSource {
     path: PathBuf,
 
@@ -18,6 +23,7 @@ pub struct RootFolderSource {
 
 fn get_datapackage_file_candidates_from_folder(
     path: &PathBuf,
+    recursive: bool,
     candidates: &mut Vec<PathBuf>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     // check folders for datapackage.json:
@@ -30,6 +36,9 @@ fn get_datapackage_file_candidates_from_folder(
                 path.push("datapackage.json");
                 if path.is_file() {
                     candidates.push(path);
+                } else if recursive {
+                    path.pop();
+                    get_datapackage_file_candidates_from_folder(&path, false, candidates)?;
                 }
             }
         }
@@ -40,6 +49,7 @@ fn get_datapackage_file_candidates_from_folder(
 
 impl RootFolderSource {
     pub fn new_from_folder(path: PathBuf) -> Self {
+        info!("Using root-folder data source at '{}'", path.display());
         let mut reval = RootFolderSource { path, buf: HashMap::new() };
         reval.sync_all().unwrap();
         reval
@@ -47,13 +57,16 @@ impl RootFolderSource {
 
     fn sync_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let mut candidates = vec![];
-        get_datapackage_file_candidates_from_folder(&self.path, &mut candidates)?;
+        get_datapackage_file_candidates_from_folder(&self.path, true, &mut candidates)?;
 
         for candidate in candidates {
+            let path = candidate.clone();
             match self.sync_file(candidate) {
-                Ok(_) => {}
+                Ok(_) => {
+                    info!("Loaded {}", path.display());
+                }
                 Err(_) => {
-                    // todo error reporting
+                    error!("Could not load '{}' for root folder data source.", path.display());
                 }
             }
         }
@@ -68,6 +81,7 @@ impl RootFolderSource {
     }
 }
 
+#[async_trait]
 impl MetaDataSource for RootFolderSource {
     async fn list_packages(
         &self,
@@ -79,15 +93,16 @@ impl MetaDataSource for RootFolderSource {
         self.buf.values().map(|(_, v)| v).cloned().collect()
     }
 
-    async fn get_package(
-        &self,
-        query: &str,
-        _filter: FilterSettings,
-    ) -> Option<crate::datapackage::DataPackage> {
+    async fn get_package(&self, query: &str, _filter: FilterSettings) -> Option<DataPackage> {
+        info!("get_package");
+        self.buf
+            .values()
+            .for_each(|el| info!("id: {}, name='{}'", el.0, el.1.name.clone().unwrap()));
+
         self.buf
             .values()
             .filter_map(|(_, v)| {
-                if v.name.clone().map_or(false, |el| el.contains(query)) { Some(v) } else { None }
+                if v.name.clone().is_some_and(|el| el.contains(query)) { Some(v) } else { None }
             })
             .nth(0)
             .cloned()
@@ -101,5 +116,83 @@ impl MetaDataSource for RootFolderSource {
         _pagation: PagationSettings,
     ) -> Vec<DataPackage> {
         todo!()
+    }
+
+    async fn put_package_metadata(&mut self, package: &DataPackage) -> Result<(), Report> {
+        // todo: error if version or name not given
+
+        // some sanity checks:
+        let name = if let Some(name) = package.name.as_ref() {
+            name
+        } else {
+            return Err(eyre!("package missing name"));
+        };
+
+        let version = if let Some(version) = package.version.as_ref() {
+            version
+        } else {
+            return Err(eyre!("Package missing version"));
+        };
+
+        let id: Uuid = if let Some(id) = package.id.as_ref() {
+            match Uuid::from_str(id) {
+                Ok(id) => id,
+                Err(_) => return Err(eyre!("Malformed id")),
+            }
+        } else {
+            return Err(eyre!("Package missing id"));
+        };
+
+        // ensure folder is there
+        let folder = self.path.join(name).join(version);
+        create_dir_all(folder.clone()).unwrap();
+        let json = serde_json::ser::to_string_pretty(package.deref()).unwrap();
+        let dp_path = folder.join("datapackage.json");
+        std::fs::write(&dp_path, json).unwrap();
+
+        // save to local buffer:
+        self.buf.insert(dp_path, (id, package.clone()));
+
+        Ok(())
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use std::str::FromStr;
+
+    use super::*;
+    use crate::datapackage::{DataPackageNotValidated, DataResourceNotValidated, ValidateData};
+
+    fn generate_example_dp() -> DataPackageNotValidated {
+        let res = DataResourceNotValidated { name: "iris.csv".into(), ..Default::default() };
+        DataPackageNotValidated {
+            resources: vec![res],
+            name: Some("iris".into()),
+            id: Some(Uuid::new_v4().to_string()),
+            ..Default::default()
+        }
+    }
+
+    #[tokio::test]
+    #[should_panic]
+    pub async fn test_put_missing_version() {
+        let mut rf = RootFolderSource::new_from_folder(PathBuf::from_str("tmp").unwrap());
+        let package = generate_example_dp();
+
+        let dp = package.validate().unwrap();
+        rf.put_package_metadata(&dp).await.expect("version is missing, so should panic");
+    }
+
+    #[tokio::test]
+    pub async fn test_put_valid() {
+        let mut rf = RootFolderSource::new_from_folder(PathBuf::from_str("tmp").unwrap());
+        let mut package = generate_example_dp();
+        package.version = Some("0.1.0".into());
+
+        let dp = package.validate().unwrap();
+        rf.put_package_metadata(&dp).await.unwrap();
+
+        assert!(std::fs::exists(PathBuf::from_str("./tmp/datapackage.json").unwrap()).is_ok())
     }
 }

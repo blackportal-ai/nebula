@@ -30,7 +30,7 @@ pub fn datapackage_meta_from_file_not_validated(
 }
 
 /// A mapping for the Data Package json format that is not validated in respect to the schema.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct DataPackageNotValidated {
     pub resources: Vec<DataResourceNotValidated>,
 
@@ -64,34 +64,34 @@ pub struct DataPackageNotValidated {
     pub delta: Option<DeltaDataPackageNotValidated>,
 }
 /// A mapping for the Data Resource json format that is not validated in respect to the schema.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct DataResourceNotValidated {
-    name: String,
+    pub name: String,
 
-    path: Option<PathSingleOrVec>,
+    pub path: Option<PathSingleOrVec>,
 
-    data: Option<DataStringOrObj>,
+    pub data: Option<DataStringOrObj>,
 
     #[serde(rename = "type")]
-    type_: Option<String>,
+    pub type_: Option<String>,
 
-    metadata: Option<String>,
+    pub metadata: Option<String>,
 
-    description: Option<String>,
+    pub description: Option<String>,
 
-    format: Option<String>,
+    pub format: Option<String>,
 
-    mediatype: Option<String>,
+    pub mediatype: Option<String>,
 
-    encoding: Option<String>,
+    pub encoding: Option<String>,
 
-    bytes: Option<u64>,
+    pub bytes: Option<u64>,
 
-    hash: Option<String>,
+    pub hash: Option<String>,
 
-    sources: Option<Vec<DataPackageSource>>,
+    pub sources: Option<Vec<DataPackageSource>>,
 
-    delta: Option<DeltaDataResourceNotValidated>,
+    pub delta: Option<DeltaDataResourceNotValidated>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
