@@ -13,6 +13,15 @@ readme = "../README.md"
 rust-version = "1.85.0"
 homepage = "https://blackportal.ai"
 keywords = ["machine-learning", "ml", "framework", "cli", "datasets"]
+default-run = "nebula"
+
+[[bin]]
+name = "nebula"
+path = "src/main.rs"
+
+[[bin]]
+name = "nebula-cli-doc"
+path = "src/cli-doc.rs"
 
 [features]
 default = []

@@ -20,6 +20,10 @@ keywords = [
     "datasets",
 ]
 
+[[bin]]
+name = "nebula-registry"
+path = "src/main.rs"
+
 [dependencies]
 color-eyre.workspace = true
 
